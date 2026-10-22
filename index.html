@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ficha de Personagem D&D 5.5</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080a12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fichas RPG">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital@0;1&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a12;--card:#0f1428;--ink:#e8dfcf;--mut:#a79a80;--line:#3b4166;--acc:#d9a441;--in:#0b0f1e;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#080a12 linear-gradient(160deg,#10162a,#080a12) fixed;color:var(--ink);font:16px/1.4 'EB Garamond',Georgia,serif}
+.w{max-width:1100px;margin:0 auto;padding:12px}
+h1{font:700 20px Cinzel,Georgia,serif;margin:0;color:var(--acc);letter-spacing:1px}
+.bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between;margin-bottom:10px}
+button{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--acc)}button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.card{background:var(--card);border:1px solid #b8923a;border-radius:6px;padding:10px;margin-bottom:10px}
+.card h2{font:700 13px Cinzel,Georgia,serif;text-transform:uppercase;letter-spacing:1px;color:var(--acc);margin:0 0 8px;border-bottom:1px solid var(--line);padding-bottom:4px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--in);border:1px solid var(--line);border-radius:5px;padding:4px 6px;width:100%;min-width:0}
+textarea{min-height:120px;resize:vertical}
+label{display:block;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.g{display:grid;gap:8px}.g2{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{text-align:center;border:1px solid var(--line);border-radius:8px;padding:6px;background:var(--in)}
+.stat b{display:block;font-size:22px;font-family:Cinzel,Georgia,serif}.stat span{font-size:11px;color:var(--mut);text-transform:uppercase}
+.stat input{text-align:center;border:0;background:transparent;font-size:20px;padding:0}
+.abs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.ab .top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.ab .top .n{flex:1 0 100%;font-weight:700}.ab .top .stp input{width:56px;height:40px;text-align:center;font-size:20px}.ab .mod{margin-left:auto}
+.ab .mod{font:700 24px Cinzel,Georgia,serif;width:52px;text-align:center;color:var(--acc)}
+.r{display:flex;align-items:center;gap:6px;padding:2px 0;border-top:1px dotted var(--line)}
+.r .v{width:34px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}.r .nm{flex:1}
+.pip{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid var(--mut);background:transparent;flex:0 0 26px}.pip.p1{background:#fff;border-color:var(--ink)}.pip.p2{background:#2f6fe0;border-color:#2f6fe0}
+.stp{display:flex;gap:4px;align-items:center}.stp button{width:40px;height:40px;font-size:22px;padding:0}
+.tbl{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px}
+th{font-size:11px;text-align:left;color:var(--mut);text-transform:uppercase;padding:2px 4px}td{padding:2px}
+td.c{text-align:center;white-space:nowrap}td input[type=checkbox]{width:auto}
+.bub{display:inline-block;width:18px;height:18px;border:2px solid var(--acc);border-radius:50%;margin:1px;cursor:pointer}
+.bub.f{background:var(--acc)}
+.sl{display:flex;align-items:center;gap:6px;margin:3px 0}.sl input{width:54px}
+.hide{display:none}
+#home{background:linear-gradient(160deg,#10162a,#080a12);color:#e8dfcf;border-radius:12px;padding:22px 18px;min-height:75vh;font-family:'EB Garamond',Georgia,serif;font-size:15px}
+.ht{font:700 26px Cinzel,Georgia,serif;margin:0;color:#f3e6c8;letter-spacing:1px}.hs{margin:4px 0 20px;color:#b8a47a;font-style:italic}
+.pg{display:flex;flex-wrap:wrap;gap:16px}.pc,.newc{width:200px;border-radius:4px;cursor:pointer}
+.newc{border:1px dashed #b8923a;min-height:290px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#b9b2a4;gap:8px}.newc span{font-size:34px;color:#c9a24a;line-height:1}
+.pc{position:relative;background:#0f1428;border:1px solid #b8923a;padding:14px 14px 36px}
+.ph{position:relative;aspect-ratio:1;background:linear-gradient(#2a2d36,#1e2028);border:1px solid #4a5aa0;display:flex;align-items:center;justify-content:center}.ph svg{width:48%;fill:#6b6b6b}
+.bd{position:absolute;top:-1px;right:-1px;background:#0b0f1e;border:1px solid #c9a24a;color:#d9a441;font:11px Cinzel,serif;text-transform:uppercase;padding:2px 7px;letter-spacing:.5px}
+.pc h3{font:700 17px Cinzel,Georgia,serif;margin:12px 0 4px;color:#f7ecd2;word-break:break-word}.pc i{display:block;color:#a79a80;font-size:13px}
+.pc em{display:block;font-style:normal;color:#c26a3f;font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.rm{position:absolute;right:8px;bottom:6px;background:none!important;border:0!important;color:#8a8a99;padding:4px 8px}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}#modal.hide{display:none}
+.mb{max-height:90vh;overflow:auto;background:#10162a;border:1px solid #b8923a;border-radius:8px;padding:18px;max-width:380px;width:100%;color:#e8dfcf}.mb h3{font:700 18px Cinzel,serif;margin:0 0 12px;color:#f3e6c8}
+.sy button{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:8px;background:#0b0f1e;color:#f3e6c8;border-color:#b8923a;padding:11px 12px}
+.sy button:disabled{opacity:.55;border-color:#444;cursor:not-allowed}.sy small{color:#d9a441;font-style:italic}.sy button:disabled small{color:#9a9a9a}
+.x{color:var(--acc);padding:2px 7px}
+:root[data-sys="t20"]{--card:#1a0f12;--ink:#f1e6e2;--mut:#b49c97;--line:#55292e;--acc:#e8473d;--in:#110809}
+:root[data-sys="t20"] .card{border-color:#b3282a}
+:root[data-sys="t20"] body{background:#0b0506 linear-gradient(160deg,#2c0c10,#0b0506) fixed}
+:root[data-sys="fu"]{--card:#0d1a16;--ink:#e6efe9;--mut:#8fb0a2;--line:#2c4a3f;--acc:#6fcdb0;--in:#08120f}
+:root[data-sys="fu"] .card{border-color:#2f7a63}
+:root[data-sys="fu"] body{background:#050d0a linear-gradient(160deg,#0f2b23,#050d0a) fixed}
+.fotobox{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.hd{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:start}.hd>*{grid-column:2}.hd>.av{grid-column:1;grid-row:1/span 10}
+.av{display:flex;flex-direction:column;align-items:center;gap:4px}.av label{cursor:pointer}.av .foto{width:92px;height:92px}.av .frm{font-size:11px;padding:2px 6px}
+.foto{width:140px;height:140px;border-radius:8px;border:1px solid var(--line);background:var(--in) center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;text-align:center}
+.bx{display:inline-block;width:22px;height:22px;border:2px solid var(--acc);border-radius:3px;margin:2px;cursor:pointer;vertical-align:middle}.bx.f{background:var(--acc)}
+:root[data-sys="al"]{--card:#080b12;--ink:#f2f4f8;--mut:#98a2b3;--line:#3d4555;--acc:#ffffff;--in:#03050a}
+:root[data-sys="al"] .card{border-color:#dfe4ec;border-radius:4px}
+:root[data-sys="al"] body{font-family:system-ui,Segoe UI,Roboto,sans-serif;background:radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent 51%) 0 0/240px 240px,radial-gradient(1px 1px at 72% 34%,#fff 50%,transparent 51%) 0 0/310px 310px,radial-gradient(1.5px 1.5px at 40% 78%,#cfd6e4 50%,transparent 51%) 0 0/270px 270px,radial-gradient(1px 1px at 88% 82%,#fff 50%,transparent 51%) 0 0/200px 200px,#020409;background-attachment:fixed}
+:root[data-sys="al"] .card h2,:root[data-sys="al"] .logo{font-family:Orbitron,system-ui,sans-serif;letter-spacing:2px}
+.logo{font:700 24px Cinzel,Georgia,serif;color:var(--acc);letter-spacing:2px}
+.cdon{border-color:#e8473d!important;box-shadow:0 0 0 1px #e8473d}
+.tsk td{border-top:1px dotted var(--line)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.row>*{flex:1;min-width:110px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+@media print{.frm,#home,#sheet.hide,#sheet2.hide,#sheet3.hide,#sheet4.hide,.sw,.bar,.tabs,.x,.add{display:none!important}.hide{display:block!important}body{background:#fff!important}:root{--ink:#000;--mut:#555;--line:#999;--card:#fff;--in:#fff;--acc:#7a1f1f}}
+</style></head><body><div class="w">
+<div id="home"><h2 class="ht">Suas Fichas</h2><p class="hs">Seus aventureiros, guardados aqui.</p><div id="grid" class="pg"></div>
+<div id="modal" class="hide"><div class="mb"><h3>Selecionar sistema</h3><div class="sy"><button data-sys="dnd"><b>D&amp;D 5.5</b><small>Disponível</small></button><button disabled><b>Daggerheart</b><small>Futuro</small></button><button data-sys="t20"><b>Tormenta20</b><small>Disponível</small></button><button data-sys="fu"><b>Fábula Ultima</b><small>Disponível</small></button><button data-sys="al"><b>Alien RPG</b><small>Disponível</small></button><button disabled><b>Ordem Paranormal</b><small>Futuro</small></button><button disabled><b>Call of Cthulhu</b><small>Futuro</small></button><button disabled><b>Mausritter</b><small>Futuro</small></button><button disabled><b>Space Cats</b><small>Futuro</small></button><button disabled><b>Riverbank</b><small>Futuro</small></button><button disabled><b>Riverbend</b><small>Futuro</small></button><button disabled><b>Solarias</b><small>Futuro</small></button><button disabled><b>Masmorras e Marmitas</b><small>Futuro</small></button></div><button data-close style="margin-top:4px">Cancelar</button></div></div></div>
+<div id="sheet" class="hide">
+<div class="bar"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="back">← Fichas</button><h1>⚔ Ficha de Personagem · D&amp;D 5.5</h1></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button id="exp">Exportar</button><button id="imp">Importar</button><button onclick="print()">Imprimir</button><button id="clr">Limpar</button></div></div>
+<div class="card sw"><p style="margin:6px 0 0;color:var(--mut);font-size:12px">💾 Salvo automaticamente neste navegador. Use Exportar para ter um backup.</p></div>
+<input type="file" id="file" accept=".json" class="hide">
+
+<div class="card"><div class="g g2">
+<div><label>Nome do personagem</label><input data-k="nome"></div>
+<div><label>Antecedente</label><input data-k="ante"></div>
+<div><label>Espécie</label><input data-k="esp"></div>
+<div><label>Classe</label><input data-k="classe" readonly></div>
+<div><label>Subclasse</label><input data-k="sub" readonly></div>
+<div><label>Nível total</label><input type="number" min="1" max="20" data-k="nivel"></div>
+<div><label>XP</label><input type="number" data-k="xp"></div>
+<div><label>Pontos de álcool</label><input type="number" data-k="alcool"></div>
+<div><label>Exaustão (6 = morte)</label><input type="number" min="0" max="6" data-k="exaus"><small id="exh" style="color:var(--mut)"></small></div>
+<div><label>Inspiração heroica</label><label style="font-size:14px;text-transform:none"><input type="checkbox" data-k="insp" style="width:auto"> Possui</label></div>
+</div></div>
+
+<div class="tabs bar" style="justify-content:flex-start">
+<button class="on" data-t="t1">Ficha</button><button data-t="t2">Magias</button><button data-t="t3">Detalhes</button><button data-t="t5">Condições</button><button data-t="t4">Extras</button></div>
+
+<section id="t1">
+<div class="card"><h2>Classes e multiclasse</h2>
+<p id="clsum" style="margin:0 0 6px;color:var(--mut);font-size:13px"></p>
+<div class="tbl"><table style="min-width:0"><tbody id="clb"></tbody></table></div>
+<button class="add" id="cladd">+ Multiclasse</button></div>
+<div class="card"><h2>Recursos de classe</h2><div id="resb"></div>
+<div class="row" style="margin-top:8px"><button class="add" id="rsh">Descanso curto</button><button class="add" id="rlg">Descanso longo (tudo)</button></div></div>
+<div class="g g2" style="margin-bottom:10px">
+<div class="stat"><b id="pb">+2</b><span>Bônus de proficiência</span></div>
+<div class="stat"><b id="ca">10</b><span>Classe de armadura</span></div>
+<div class="stat"><b id="ini">+0</b><span>Iniciativa</span></div>
+<div class="stat"><input data-k="desl" placeholder="9 m"><span>Deslocamento</span></div>
+<div class="stat"><input data-k="tam" placeholder="Médio"><span>Tamanho</span></div>
+<div class="stat"><b id="pp">10</b><span>Percepção passiva</span></div>
+</div>
+
+<div class="cols">
+<div class="card"><h2>Classe de armadura</h2><div class="g g2">
+<div><label>Armadura</label><select data-k="arm"><option value="none">Sem armadura (10+Des)</option><option value="leve">Leve (base+Des)</option><option value="media">Média (base+Des máx 2)</option><option value="pesada">Pesada (base)</option><option value="barb">Defesa s/ armadura: Bárbaro</option><option value="monge">Defesa s/ armadura: Monge</option></select></div>
+<div><label>CA base da armadura</label><input type="number" data-k="armBase"></div>
+<div><label>Escudo (+2)</label><input type="checkbox" data-k="esc" style="width:auto"></div>
+<div><label>Outros bônus CA</label><input type="number" data-k="caMisc"></div>
+<div><label>Bônus extra iniciativa</label><input type="number" data-k="iniMisc"></div>
+</div>
+<label style="margin-top:8px">Treinamento com armadura</label>
+<div class="row" style="font-size:13px;text-transform:none">
+<label style="text-transform:none"><input type="checkbox" data-k="tl" style="width:auto"> Leve</label><label style="text-transform:none"><input type="checkbox" data-k="tm" style="width:auto"> Média</label><label style="text-transform:none"><input type="checkbox" data-k="tp" style="width:auto"> Pesada</label><label style="text-transform:none"><input type="checkbox" data-k="te" style="width:auto"> Escudos</label></div></div>
+
+<div class="card"><h2>Pontos de vida</h2><div class="g g2">
+<div><label>Atual</label><input type="number" data-k="hp"></div>
+<div><label>Máximo</label><input type="number" data-k="hpMax"></div>
+<div><label>Temporário</label><input type="number" data-k="hpTmp"></div>
+<div><label>Dados de vida (total, ex: 3d8)</label><input data-k="dv"><small id="dvh" style="color:var(--mut)"></small></div>
+<div><label>Dados gastos</label><input type="number" data-k="dvG"></div></div>
+<label style="margin-top:8px">Salvaguarda contra morte</label>
+<div>Sucessos <span id="dss"></span> &nbsp; Falhas <span id="dsf"></span></div>
+<div style="margin-top:6px"><button id="cura">Descanso longo (zera gastos)</button></div></div>
+</div>
+
+<div class="card"><h2>Gráfico de atributos</h2><svg id="rad" viewBox="0 0 300 290" style="width:100%;max-width:360px;display:block;margin:0 auto"></svg></div>
+<div class="abs" id="abs"></div>
+
+<div class="card" style="margin-top:10px"><h2>Armas e truques de dano</h2><div class="tbl"><table><thead><tr><th>Nome</th><th>Atributo</th><th>Prof.</th><th>Extra</th><th>Atq</th><th>Dano (dados)</th><th>Dano total</th><th>Tipo</th><th>Obs.</th><th></th></tr></thead><tbody id="wb"></tbody></table></div><button class="add" id="wa">+ Arma</button></div>
+
+<div class="card"><h2>Características de classe</h2><textarea data-k="cc" style="min-height:200px"></textarea></div>
+<div class="cols"><div class="card"><h2>Traços de espécie</h2><textarea data-k="te2"></textarea></div><div class="card"><h2>Talentos</h2><textarea data-k="tal"></textarea></div></div>
+<div class="card"><h2>Treinamento e proficiência em equipamentos</h2><div class="cols"><div><label>Armas</label><textarea data-k="parm" style="min-height:70px"></textarea></div><div><label>Ferramentas</label><textarea data-k="pfer" style="min-height:70px"></textarea></div></div></div>
+
+</section>
+
+<section id="t2" class="hide">
+<div class="card"><h2>Conjuração</h2><div class="g g2">
+<div><label>Atributo de conjuração</label><select data-k="castAb"><option value="">—</option><option value="int">Inteligência</option><option value="sab">Sabedoria</option><option value="car">Carisma</option></select></div>
+<div class="stat"><b id="cmod">+0</b><span>Mod. de atributo</span></div>
+<div class="stat"><b id="ccd">8</b><span>CD para evitar magia</span></div>
+<div class="stat"><b id="catk">+0</b><span>Bônus de ataque mágico</span></div></div></div>
+<div class="card"><h2>Espaços de magia (clique nas bolhas para gastar)</h2><div class="g g2" id="slots"></div></div>
+<div class="card"><h2>Truques e magias preparadas</h2><div class="tbl"><table><thead><tr><th>Círc.</th><th>Nome</th><th>Conjuração</th><th>Alcance</th><th>C</th><th>R</th><th>M</th><th>Observações</th><th></th></tr></thead><tbody id="sb"></tbody></table></div><button class="add" id="sa">+ Magia</button></div>
+</section>
+
+<section id="t3" class="hide"><div class="cols">
+<div><div class="card"><h2>Aparência</h2><textarea data-k="apar"></textarea></div>
+<div class="card"><h2>História e personalidade</h2><textarea data-k="hist"></textarea><label style="margin-top:6px">Alinhamento</label><input data-k="alin"></div>
+<div class="card"><h2>Idiomas</h2><textarea data-k="idi" style="min-height:70px"></textarea></div></div>
+<div><div class="card"><h2>Equipamento</h2><textarea data-k="eq" style="min-height:220px"></textarea>
+<label style="margin-top:6px">Itens mágicos sintonizados</label>
+<div class="g"><div class="row"><input type="checkbox" data-k="at0" style="flex:0 0 20px;min-width:0"><input data-k="ai0"></div><div class="row"><input type="checkbox" data-k="at1" style="flex:0 0 20px;min-width:0"><input data-k="ai1"></div><div class="row"><input type="checkbox" data-k="at2" style="flex:0 0 20px;min-width:0"><input data-k="ai2"></div></div></div>
+<div class="card"><h2>Moedas</h2><div class="row"><div><label>PC</label><input type="number" data-k="pc"></div><div><label>PP</label><input type="number" data-k="pp2"></div><div><label>CE</label><input type="number" data-k="ce"></div><div><label>PO</label><input type="number" data-k="po"></div><div><label>PL</label><input type="number" data-k="pl"></div></div>
+<p style="margin:8px 0 0;color:var(--mut)">Total em PO: <b id="tot">0</b></p></div></div>
+</div></section>
+<section id="t5" class="hide"><div id="cnd"></div></section>
+<section id="t4" class="hide"><div class="extras"></div></section>
+</div>
+<div id="sheet2" class="hide">
+<div class="bar"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="back2">← Fichas</button><span class="logo">TORMENTA20</span></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button onclick="$('exp').click()">Exportar</button><button onclick="$('imp').click()">Importar</button><button onclick="print()">Imprimir</button><button onclick="$('clr').click()">Limpar</button></div></div>
+<div class="card"><div class="g g2">
+<div><label>Personagem</label><input data-k="nome"></div><div><label>Jogador</label><input data-k="jog"></div>
+<div><label>Raça</label><input data-k="esp"></div><div><label>Origem</label><input data-k="ori"></div>
+<div><label>Classe</label><input data-k="classe" list="tcl" placeholder="Escolha ou escreva"><datalist id="tcl"></datalist></div>
+<div><label>Nível (1–20)</label><input type="number" min="1" max="20" data-k="nivel"></div>
+<div><label>Divindade</label><input data-k="div2"></div></div></div>
+<div class="card"><h2>Gráfico de atributos</h2><svg id="rad2" viewBox="0 0 300 290" style="width:100%;max-width:360px;display:block;margin:0 auto"></svg></div>
+<div class="abs" id="tab"></div>
+<p style="color:var(--mut);margin:0 0 10px">Compra de pontos (valores base, sem bônus racial): <b id="tpts"></b></p>
+<p style="color:var(--mut);font-size:12px;margin:0 0 10px">Perícias dentro de cada atributo: marque a caixa para treinar · † penalidade de armadura (automática) · * só pode ser usada se treinada · Treinadas marcadas: <b id="ttrn">0</b> (você ganha treinadas extras iguais ao bônus de Int)</p>
+<div class="cols">
+<div class="card"><h2>Pontos de vida</h2><div class="g g2"><div><label>Atuais</label><input type="number" data-k="pvA"></div><div><label>Máximos</label><input type="number" data-k="pvM"></div><div><label>Temporários</label><input type="number" data-k="pvT"></div></div>
+<div style="margin-top:8px"><button id="spv">Sugerir pela classe</button> <small id="tpvh" style="color:var(--mut)"></small></div></div>
+<div class="card"><h2>Pontos de mana</h2><div class="g g2"><div><label>Atuais</label><input type="number" data-k="pmA"></div><div><label>Máximos</label><input type="number" data-k="pmM"></div><div><label>Temporários</label><input type="number" data-k="pmT"></div></div>
+<div style="margin-top:8px"><button id="spm">Sugerir pela classe</button> <small id="tpmh" style="color:var(--mut)"></small></div></div>
+</div>
+<div class="card"><h2>Defesa</h2><div class="g g2">
+<div class="stat"><b id="tdef">10</b><span>Defesa</span></div>
+<div><label>Armadura</label><select data-k="tar"><option value="0|0">Nenhuma</option><option value="1|0">Acolchoada (+1)</option><option value="2|0">Couro (+2)</option><option value="3|1">Couro batido (+3, pen. 1)</option><option value="4|3">Gibão de peles (+4, pen. 3)</option><option value="5|4">Couraça (+5, pen. 4)</option><option value="5|2">Brunea (+5, pen. 2)</option><option value="6|2">Cota de malha (+6, pen. 2)</option><option value="7|3">Loriga segmentada (+7, pen. 3)</option><option value="8|4">Meia armadura (+8, pen. 4)</option><option value="10|5">Armadura completa (+10, pen. 5)</option><option value="custom">Outro (personalizada)</option></select></div>
+<div><label>Escudo</label><select data-k="tes"><option value="0|0">Nenhum</option><option value="1|1">Escudo leve (+1, pen. 1)</option><option value="2|2">Escudo pesado (+2, pen. 2)</option><option value="custom">Outro (personalizado)</option></select></div>
+<div><label>Outros bônus</label><input type="number" data-k="tdo"></div></div>
+<div class="g g2" id="tarx" style="display:none;margin-top:8px"><div><label>Armadura: nome</label><input data-k="tarN" placeholder="Ex: Armadura de couro de dragão"></div><div><label>Bônus na Defesa</label><input type="number" data-k="tarB"></div><div><label>Penalidade de armadura</label><input type="number" min="0" data-k="tarP"></div></div>
+<div class="g g2" id="tesx" style="display:none;margin-top:8px"><div><label>Escudo: nome</label><input data-k="tesN" placeholder="Ex: Escudo de aço rúnico"></div><div><label>Bônus na Defesa</label><input type="number" data-k="tesB"></div><div><label>Penalidade de armadura</label><input type="number" min="0" data-k="tesP"></div></div>
+<p id="tdd" style="color:var(--mut);font-size:13px;margin:6px 0 0"></p></div>
+<div class="card"><h2>Ataques</h2><div class="tbl"><table><thead><tr><th>Nome</th><th>Perícia</th><th>Extra</th><th>Teste</th><th>Dano</th><th>Crítico</th><th>Tipo</th><th>Alcance</th><th></th></tr></thead><tbody id="tatk"></tbody></table></div><button class="add" id="tadd">+ Ataque</button></div>
+
+<div class="card"><h2>Habilidades &amp; magias</h2><textarea data-k="hab" style="min-height:240px"></textarea></div>
+<div class="cols"><div class="card"><h2>Proficiências &amp; outras características</h2><textarea data-k="prof2"></textarea></div>
+<div class="card"><h2>Equipamento</h2><textarea data-k="eq2"></textarea><div class="row" style="margin-top:6px"><div><label>T$</label><input type="number" data-k="tsi"></div><div><label>TO</label><input type="number" data-k="tou"></div></div></div></div>
+<div class="extras"></div>
+</div>
+<div id="sheet3" class="hide">
+<div class="bar"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="back3">← Fichas</button><span class="logo">FABULA ULTIMA</span></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button onclick="$('exp').click()">Exportar</button><button onclick="$('imp').click()">Importar</button><button onclick="print()">Imprimir</button><button onclick="$('clr').click()">Limpar</button></div></div>
+<datalist id="fcls"></datalist>
+<div class="card"><div class="g g2"><div><label>Nome</label><input data-k="nome"></div><div><label>Pronomes</label><input data-k="pron"></div>
+<div><label>Identidade</label><input data-k="fid"></div><div><label>Tema</label><input data-k="ftema"></div><div><label>Origem</label><input data-k="fori"></div>
+<div><label>Nível de personagem (1–50)</label><input type="number" min="1" max="50" data-k="nivel"></div></div>
+<p id="fsl" style="color:var(--mut);font-size:13px;margin:6px 0 0"></p></div>
+<div class="card"><h2>Atributos &amp; condições</h2><svg id="radf" viewBox="0 0 300 300" style="width:100%;max-width:340px;display:block;margin:0 auto 8px"></svg>
+<div class="g g2" id="fatt"></div>
+<div class="row" id="fcond" style="margin-top:10px"></div>
+<p style="color:var(--mut);font-size:12px;margin:8px 0 0">Distribuições iniciais do livro: d8/d8/d8/d8 · d10/d8/d8/d6 · d10/d10/d6/d6. Cada condição reduz o dado <b>atual</b> em um passo (mínimo d6), e os efeitos se acumulam: Lento (Des) · Confuso (Int) · Fraco (Vig) · Abalado (Von) · Enfurecido (Des e Int) · Envenenado (Vig e Von).</p></div>
+<div class="cols">
+<div class="card"><h2>Pontos de vida, mentais e de inventário</h2>
+<div class="row"><div><label>PV atuais</label><input type="number" data-k="fpvA"></div><div class="stat"><b id="fpvm">0</b><span>PV máx.</span></div><div><label>Outros (PV)</label><input type="number" data-k="pvO"></div></div>
+<p id="fcrise" style="color:var(--mut);font-size:13px;margin:4px 0 10px"></p>
+<div class="row"><div><label>PM atuais</label><input type="number" data-k="fpmA"></div><div class="stat"><b id="fpmm">0</b><span>PM máx.</span></div><div><label>Outros (PM)</label><input type="number" data-k="pmO"></div></div>
+<div class="row" style="margin-top:10px"><div><label>PI atuais</label><input type="number" data-k="fpiA"></div><div class="stat"><b id="fpim">6</b><span>PI máx.</span></div><div><label>Outros (PI)</label><input type="number" data-k="piO"></div></div>
+<p style="color:var(--mut);font-size:12px;margin:8px 0 0">PV = Vigor base × 5 + nível + outros · PM = Vontade base × 5 + nível + outros · PI = 6 + outros · Crise = metade do PV máximo.</p>
+<div style="margin-top:6px"><button id="fap">Aplicar bônus das classes em “Outros”</button> <small id="fsug" style="color:var(--mut)"></small></div></div>
+<div class="card"><h2>Defesas &amp; iniciativa</h2>
+<div class="g g2"><div class="stat"><b id="fdef">8</b><span>Defesa</span></div><div class="stat"><b id="fmdef">8</b><span>Defesa mágica</span></div><div class="stat"><b id="fini">0</b><span>Mod. iniciativa</span></div></div>
+<div class="g g2" style="margin-top:8px"><div><label>Armadura</label><select data-k="arf" id="farm"></select></div><div><label>Escudo</label><select data-k="esf" id="fesc"></select></div></div>
+<div class="g g2" id="farx" style="display:none;margin-top:8px"><div><label>Armadura: Defesa fixa (vazio = dado de Des)</label><input type="number" data-k="arF"></div><div><label>Bônus Defesa</label><input type="number" data-k="arD"></div><div><label>Bônus M. Defesa</label><input type="number" data-k="arM"></div><div><label>Iniciativa</label><input type="number" data-k="arI"></div></div>
+<div class="g g2" id="fesx" style="display:none;margin-top:8px"><div><label>Escudo: bônus Defesa</label><input type="number" data-k="esD"></div><div><label>Escudo: bônus M. Defesa</label><input type="number" data-k="esM"></div><div><label>Escudo: iniciativa</label><input type="number" data-k="esI"></div></div>
+<div class="g g2" style="margin-top:8px"><div><label>Outros: Defesa</label><input type="number" data-k="fod"></div><div><label>Outros: M. Defesa</label><input type="number" data-k="fom"></div><div><label>Outros: iniciativa</label><input type="number" data-k="foi"></div></div>
+<p style="color:var(--mut);font-size:12px;margin:8px 0 0">Defesa = dado atual de Destreza (ou o valor fixo da armadura marcial) + bônus · Defesa mágica = dado atual de Intuição + bônus.</p></div>
+</div>
+<div class="cols">
+<div class="card"><h2>Pontos Fabula</h2><div class="row"><button data-fp="fp:-1">−</button><div><input type="number" data-k="fp" style="text-align:center;font-size:22px"></div><button data-fp="fp:1">+</button></div>
+<p style="color:var(--mut);font-size:12px;margin:8px 0 0">+1 se começar a sessão sem nenhum · +1 quando um Vilão aparecer · +1 ao vacilar um Teste · +2 se render-se com 0 PV. Gaste 1 para invocar característica (rolar de novo), invocar laço (soma a força) ou alterar a história.</p></div>
+<div class="card"><h2>Experiência</h2><div class="row"><div><label>XP</label><input type="number" data-k="fxp"></div><button id="fup">Subir de nível (−10 XP)</button></div>
+<p style="color:var(--mut);font-size:12px;margin:8px 0 0">Ao fim de cada sessão: +5 XP, + Pontos Fabula gastos pelo grupo ÷ nº de jogadores, + Pontos Ultima gastos pelos Vilões. Com 10 ou mais XP: perde 10 e ganha 1 nível.</p></div>
+</div>
+<div class="card"><h2>Laços</h2><div class="g g2" id="fbonds"></div></div>
+<div class="card"><h2>Classes &amp; níveis</h2><p style="color:var(--mut);font-size:12px;margin:0 0 6px">Você pode ter até 3 classes sem maestria. Sugestões na lista, mas o campo é livre.</p>
+<div class="tbl"><table style="min-width:0"><tbody id="fcl"></tbody></table></div><button class="add" id="fcladd">+ Classe</button></div>
+<div class="card"><h2>Habilidades heroicas</h2><textarea data-k="fher"></textarea></div>
+<div class="card"><h2>Equipamento</h2><div class="row" style="margin-bottom:8px"><span style="flex:0 0 auto;color:var(--mut)">Pode equipar:</span>
+<label style="text-transform:none;font-size:14px;color:var(--ink);flex:0 0 auto"><input type="checkbox" data-k="fe_a" style="width:auto"> Armadura M.</label><label style="text-transform:none;font-size:14px;color:var(--ink);flex:0 0 auto"><input type="checkbox" data-k="fe_e" style="width:auto"> Escudos M.</label><label style="text-transform:none;font-size:14px;color:var(--ink);flex:0 0 auto"><input type="checkbox" data-k="fe_c" style="width:auto"> Armas corpo a corpo M.</label><label style="text-transform:none;font-size:14px;color:var(--ink);flex:0 0 auto"><input type="checkbox" data-k="fe_l" style="width:auto"> Armas longo alcance M.</label></div>
+<div id="feq"></div></div>
+<div class="card"><h2>Arcana &amp; feitiços</h2><div class="tbl"><table style="min-width:0"><tbody id="fsp"></tbody></table></div><button class="add" id="fspadd">+ Feitiço / Arcana</button></div>
+<div class="card"><h2>Rituais</h2><div class="row" id="frit" style="margin-bottom:8px"></div><textarea data-k="frn" style="min-height:80px" placeholder="Anotações de rituais"></textarea></div>
+<div class="cols"><div class="card"><h2>Mochila &amp; anotações</h2><textarea data-k="fmoc" style="min-height:160px"></textarea></div>
+<div class="card"><h2>Zênite</h2><input type="number" data-k="fz" style="font-size:22px"></div></div>
+<div class="extras"></div>
+</div>
+<div id="sheet4" class="hide">
+<div class="bar"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="back4">← Fichas</button><span class="logo">ALIEN · RPG</span></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button onclick="$('exp').click()">Exportar</button><button onclick="$('imp').click()">Importar</button><button onclick="print()">Imprimir</button><button onclick="$('clr').click()">Limpar</button></div></div>
+<datalist id="acars"></datalist><datalist id="adist"></datalist>
+<div class="card"><div class="g g2"><div><label>Nome</label><input data-k="nome"></div><div><label>Carreira</label><input data-k="acar" list="acars"></div><div><label>Camarada</label><input data-k="acam"></div><div><label>Rival</label><input data-k="ariv"></div></div>
+<div class="cols" style="margin-top:8px"><div><label>Aparência</label><textarea data-k="aapa" style="min-height:70px"></textarea></div><div><label>Meta pessoal</label><textarea data-k="ameta" style="min-height:70px"></textarea></div></div></div>
+<div class="card"><h2>Atributos</h2><svg id="rada" viewBox="0 0 300 300" style="width:100%;max-width:340px;display:block;margin:0 auto"></svg>
+<p style="color:var(--mut);font-size:12px;margin:6px 0 0;text-align:center">Pontos de atributo gastos: <b id="apts">0</b> / 14 (mín. 2 e máx. 4 em cada, 5 no atributo principal da carreira; androides ganham +3 em dois atributos) · Pontos de habilidade: <b id="asp">0</b> / 10</p></div>
+<div class="abs" id="aat" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))"></div>
+<p style="color:var(--mut);font-size:12px;margin:0 0 10px">Rolagem de habilidade = atributo + nível da habilidade + modificador de equipamento (dados base) + dados de estresse (<b id="astn">0</b> agora). O campo ao lado de cada habilidade é o modificador de equipamento.</p>
+<div class="cols">
+<div class="card"><h2>Vitalidade</h2><div id="avit"></div><div class="row" style="margin-top:6px"><div class="stat"><b id="avm">0</b><span>Vitalidade máx.</span></div><div><label>Extras (talentos)</label><input type="number" data-k="avO"></div></div>
+<p style="color:var(--mut);font-size:12px;margin:6px 0 0">Máxima = Força + extras. Clique nas caixas para marcar a Vitalidade atual. Em zero você está Quebrado e sofre lesão crítica.</p></div>
+<div class="card"><h2>Nível de estresse</h2><div id="astr"></div><p style="color:var(--mut);font-size:12px;margin:6px 0 0">Cada ponto de estresse é um dado de estresse extra nas suas rolagens.</p>
+<h2 style="margin-top:12px">Radiação</h2><div id="arad"></div></div></div>
+<div class="cols">
+<div class="card"><h2>Condições</h2><div class="g g2"><label style="text-transform:none;font-size:14px;color:var(--ink)"><input type="checkbox" data-k="acd_0" style="width:auto"> Faminto</label><label style="text-transform:none;font-size:14px;color:var(--ink)"><input type="checkbox" data-k="acd_1" style="width:auto"> Desidratado</label><label style="text-transform:none;font-size:14px;color:var(--ink)"><input type="checkbox" data-k="acd_2" style="width:auto"> Exausto</label><label style="text-transform:none;font-size:14px;color:var(--ink)"><input type="checkbox" data-k="acd_3" style="width:auto"> Congelando</label></div>
+<label style="margin-top:8px">Lesões críticas</label><textarea data-k="acri" style="min-height:70px"></textarea></div>
+<div class="card"><h2>Consumíveis (Abastecimento)</h2><div class="g g2"><div><label>Ar</label><input type="number" data-k="acn_0"></div><div><label>Comida</label><input type="number" data-k="acn_1"></div><div><label>Energia</label><input type="number" data-k="acn_2"></div><div><label>Água</label><input type="number" data-k="acn_3"></div></div>
+<p style="color:var(--mut);font-size:12px;margin:6px 0 0">Em cada rolagem de Abastecimento, role dados de estresse iguais à classificação; cada caveira reduz a classificação em um.</p></div></div>
+<div class="cols">
+<div class="card"><h2>Talentos</h2><textarea data-k="atal" style="min-height:110px"></textarea></div>
+<div class="card"><h2>Experiência &amp; história</h2><label>Pontos de experiência</label><div id="axp"></div><label style="margin-top:8px">Pontos de história</label><div id="aph"></div></div></div>
+<div class="card"><h2>Armadura &amp; carga</h2><div class="g g2"><div><label>Armadura</label><input data-k="aarm"></div><div><label>Nível de armadura</label><input type="number" data-k="aarmN"></div><div><label>Carga atual (itens)</label><input type="number" data-k="acarga"></div><div class="stat"><b id="acap">0</b><span>Capacidade (Força × 2)</span></div></div>
+<p id="acst" style="color:var(--mut);font-size:12px;margin:6px 0 0"></p></div>
+<div class="card"><h2>Armas</h2><div class="tbl"><table style="min-width:0"><thead><tr><th>Nome</th><th>Bônus</th><th>Dano</th><th>Distância</th><th></th></tr></thead><tbody id="alw"></tbody></table></div><button class="add" id="aadd">+ Arma</button></div>
+<div class="cols"><div class="card"><h2>Equipamento</h2><div id="aeq"></div></div>
+<div><div class="card"><h2>Itens minúsculos</h2><textarea data-k="amin" style="min-height:90px"></textarea></div><div class="card"><h2>Item emocional</h2><input data-k="aemo"></div></div></div>
+<div class="extras"></div>
+</div></div>
+<script>
+const AB=[['for','Força'],['des','Destreza'],['con','Constituição'],['int','Inteligência'],['sab','Sabedoria'],['car','Carisma']];
+const SK=[['Atletismo','for'],['Acrobacia','des'],['Furtividade','des'],['Prestidigitação','des'],['Arcanismo','int'],['História','int'],['Investigação','int'],['Natureza','int'],['Religião','int'],['Lidar com Animais','sab'],['Intuição','sab'],['Medicina','sab'],['Percepção','sab'],['Sobrevivência','sab'],['Atuação','car'],['Enganação','car'],['Intimidação','car'],['Persuasão','car']];
+const KEY='ficha-dnd55';
+const LK='ficha-dnd55-lista';
+const novo=()=>{const o={nivel:1,arm:'none',weapons:[{}],spells:[{}],sv:{},sk:{},spent:{}};AB.forEach(a=>o['a_'+a[0]]=10);return o};
+let DB={cur:null,chars:{}};
+try{const r=localStorage.getItem(LK);if(r)DB=JSON.parse(r);else{const old=localStorage.getItem(KEY);if(old){DB.cur='c1';DB.chars.c1=JSON.parse(old)}}}catch(e){}
+if(!DB.chars)DB.chars={};DB.cur=null;
+let S=novo();
+const $=id=>document.getElementById(id),mod=v=>Math.floor((v-10)/2),fmt=n=>(n>=0?'+':'')+n,num=v=>+v||0;
+const save=()=>{if(DB.cur)DB.chars[DB.cur]=S;try{localStorage.setItem(LK,JSON.stringify(DB))}catch(e){}refreshSel()};
+const SYS={dnd:'D&amp;D 5.5',t20:'Tormenta20',fu:'Fábula Ultima',al:'Alien RPG'};
+function refreshSel(){$('grid').innerHTML='<div class="newc" id="newc"><span>+</span>Criar ficha</div>'+Object.keys(DB.chars).map(id=>{const c=DB.chars[id];return `<div class="pc" data-open="${id}"><div class="ph"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c0-5 3.8-7.5 8.5-7.5s8.5 2.5 8.5 7.5z"/></svg>${c.foto?`<img src="${c.foto}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:''}<span class="bd">Nível ${num(c.nivel)||1}</span></div><h3>${esc(c.nome||'Sem nome')}</h3><i>${esc([c.esp,c.classe].filter(Boolean).join(' · ')||'Sem classe')}</i><em>${SYS[c.sys||'dnd']}</em><button class="rm" data-del="${id}" title="Excluir">✕</button></div>`}).join('')}
+const abSel=(v,none)=>`<select data-f="ab">${none?'<option value="">—</option>':''}${AB.map(a=>`<option value="${a[0]}"${v==a[0]?' selected':''}>${a[0].toUpperCase()}</option>`).join('')}</select>`;
+
+// atributos + perícias
+$('abs').innerHTML=AB.map(([k,n])=>`<div class="card ab"><div class="top"><span class="n">${n}</span><div class="stp"><button data-st="${k}:-1">−</button><input type="number" inputmode="numeric" min="1" max="30" data-k="a_${k}" onfocus="this.select()"><button data-st="${k}:1">+</button></div><span class="mod" id="m_${k}">+0</span></div>
+<div class="r"><button class="pip" data-sv="${k}"></button><span class="nm"><b>Salvaguarda</b></span><span class="v" id="sv_${k}"></span></div>
+${SK.filter(s=>s[1]==k).map(s=>`<div class="r"><button class="pip" data-sk="${s[0]}"></button><span class="nm">${s[0]}</span><span class="v" id="sk_${s[0]}"></span></div>`).join('')}</div>`).join('');
+
+// bolhas
+const bubs=(n,done,att)=>Array.from({length:n},(_,i)=>`<span class="bub${i<done?' f':''}" ${att}="${i}"></span>`).join('');
+$('slots').innerHTML=[1,2,3,4,5,6,7,8,9].map(i=>`<div class="sl"><b style="width:28px">${i}º</b><input type="number" min="0" max="9" data-k="slot${i}" title="Total"><span id="sb${i}"></span></div>`).join('');
+
+function bind(){document.querySelectorAll('[data-k]').forEach(e=>{const v=S[e.dataset.k];if(e.type=='checkbox')e.checked=!!v;else e.value=v===undefined?'':v})}
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.k){S[t.dataset.k]=t.type=='checkbox'?t.checked:t.value}
+ else if(t.dataset.a){const o=t.closest('tr').dataset;S[o.a][o.i][t.dataset.f]=t.type=='checkbox'?t.checked:t.value;if(o.a=='cls'&&t.dataset.f=='n')rowsC()}
+ calc();save()});
+document.addEventListener('click',e=>{const t=e.target;
+ if(t.dataset.sv){S.sv[t.dataset.sv]=!S.sv[t.dataset.sv]}
+ else if(t.dataset.sk){S.sk[t.dataset.sk]=((S.sk[t.dataset.sk]||0)+1)%3}
+ else if(t.dataset.ds){const k=t.dataset.ds;S[k]=S[k]==+t.dataset.i+1?+t.dataset.i:+t.dataset.i+1}
+ else if(t.dataset.sp){const l=t.closest('.sl').querySelector('input').dataset.k.slice(4),i=+t.dataset.sp;S.spent[l]=S.spent[l]==i+1?i:i+1}
+ else if(t.dataset.rm){const[a,i]=t.dataset.rm.split(':');S[a].splice(+i,1);if(!S[a].length)S[a].push({});rows()}
+ else if(t.dataset.st){const[k,d]=t.dataset.st.split(':'),n=Math.min(30,Math.max(1,num(S['a_'+k])+ +d));S['a_'+k]=n;document.querySelector(`[data-k="a_${k}"]`).value=n}
+ else if(t.dataset.lv){const[k,v]=t.dataset.lv.split(':');S[k]=num(S[k])==+v?+v-1:+v}
+ else if(t.dataset.bx){const[k,i]=t.dataset.bx.split(':');S[k]=num(S[k])==+i+1?+i:+i+1}
+ else if(t.dataset.fp){const[k,d]=t.dataset.fp.split(':');S[k]=Math.max(0,num(S[k])+ +d);document.querySelector(`[data-k="${k}"]`).value=S[k]}
+ else if(t.dataset.st2){const[k,d]=t.dataset.st2.split(':'),n=Math.min(30,Math.max(1,num(S[k])+ +d));S[k]=n;document.querySelector(`[data-k="${k}"]`).value=n}
+ else if(t.dataset.rx){const[k,d]=t.dataset.rx.split(':');S.rx=S.rx||{};S.rx[k]=Math.max(0,num(S.rx[k])+ +d)}
+ else if(t.dataset.ru){const[k,i]=t.dataset.ru.split(':'),mx=RM[k]||0,rem=mx-Math.min(mx,num(S.ru[k])),n=rem==+i+1?+i:+i+1;S.ru[k]=mx-n}
+ else if(t.dataset.t){document.querySelectorAll('section').forEach(s=>s.classList.add('hide'));$(t.dataset.t).classList.remove('hide');document.querySelectorAll('[data-t]').forEach(b=>b.classList.toggle('on',b==t))}
+ else return;calc();save()});
+
+function rows(){
+ $('wb').innerHTML=S.weapons.map((w,i)=>`<tr data-a="weapons" data-i="${i}"><td><input data-a="1" data-f="n" value="${esc(w.n)}"></td><td>${abSel(w.ab,1).replace('data-f','data-a="1" data-f')}</td><td class="c"><input type="checkbox" data-a="1" data-f="p"${w.p?' checked':''}></td><td><input type="number" style="width:60px" data-a="1" data-f="x" value="${esc(w.x)}"></td><td class="c"><b class="wa">+0</b></td><td><input data-a="1" data-f="d" placeholder="1d8" value="${esc(w.d)}"></td><td class="c"><b class="wd"></b></td><td><input data-a="1" data-f="t" value="${esc(w.t)}"></td><td><input data-a="1" data-f="o" value="${esc(w.o)}"></td><td><button class="x" data-rm="weapons:${i}">✕</button></td></tr>`).join('');
+ $('sb').innerHTML=S.spells.map((w,i)=>`<tr data-a="spells" data-i="${i}"><td><input style="width:54px" data-a="1" data-f="c" value="${esc(w.c)}" placeholder="0"></td><td><input data-a="1" data-f="n" value="${esc(w.n)}"></td><td><input data-a="1" data-f="tc" value="${esc(w.tc)}"></td><td><input data-a="1" data-f="al" value="${esc(w.al)}"></td>${['C','R','M'].map(c=>`<td class="c"><input type="checkbox" data-a="1" data-f="${c}"${w[c]?' checked':''}></td>`).join('')}<td><input data-a="1" data-f="o" value="${esc(w.o)}"></td><td><button class="x" data-rm="spells:${i}">✕</button></td></tr>`).join('');
+ rowsC();rowsT();rowsF();rowsA();rowsX();calc()}
+const esc=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+$('wa').onclick=()=>{S.weapons.push({});rows();save()};
+$('sa').onclick=()=>{S.spells.push({});rows();save()};
+
+const R=95,pt=(i,r)=>{const a=-Math.PI/2+i*Math.PI/3;return[(150+r*Math.cos(a)).toFixed(1),(140+r*Math.sin(a)).toFixed(1)]};
+function radar(m,id){const gv=k=>id=='rad2'?num(S['ta_'+k])+num(S['tb_'+k]):num(S['a_'+k]);let s='';[5,10,15,20].forEach(v=>s+=`<polygon points="${AB.map((_,i)=>pt(i,R*v/20).join(',')).join(' ')}" fill="none" style="stroke:var(--line)"/>`);
+ AB.forEach(([k],i)=>{const e=pt(i,R),l=pt(i,R+26);s+=`<line x1="150" y1="140" x2="${e[0]}" y2="${e[1]}" style="stroke:var(--line)"/><text x="${l[0]}" y="${l[1]}" text-anchor="middle" font-size="11" style="fill:var(--mut)">${k.toUpperCase()}<tspan x="${l[0]}" dy="14" font-size="13" font-weight="700" style="fill:var(--ink)">${gv(k)} (${fmt(m[k])})</tspan></text>`});
+ s+=`<polygon points="${AB.map(([k],i)=>pt(i,R*Math.min(20,gv(k))/20).join(',')).join(' ')}" fill-opacity=".3" stroke-width="2" style="fill:var(--acc);stroke:var(--acc)"/>`;$(id||'rad').innerHTML=s}
+const CL={Arcanista:[8,2,6],Bárbaro:[24,6,3],Bardo:[12,3,4],Bucaneiro:[16,4,3],Caçador:[16,4,4],Cavaleiro:[20,5,3],Clérigo:[16,4,5],Druida:[16,4,4],Guerreiro:[20,5,3],Inventor:[12,3,4],Ladino:[12,3,4],Lutador:[20,5,3],Nobre:[16,4,4],Paladino:[20,5,3]};
+const TS=[['Acrobacia','des','a'],['Adestramento','car','t'],['Atletismo','for',''],['Atuação','car',''],['Cavalgar','des',''],['Conhecimento','int','t'],['Cura','sab',''],['Diplomacia','car',''],['Enganação','car',''],['Fortitude','con',''],['Furtividade','des','a'],['Guerra','int','t'],['Iniciativa','des',''],['Intimidação','car',''],['Intuição','sab',''],['Investigação','int',''],['Jogatina','car','t'],['Ladinagem','des','at'],['Luta','for',''],['Misticismo','int','t'],['Nobreza','int','t'],['Ofício','int','to'],['Ofício','int','to'],['Percepção','sab',''],['Pilotagem','des','t'],['Pontaria','des',''],['Reflexos','des',''],['Religião','sab','t'],['Sobrevivência','sab',''],['Vontade','sab','']];
+const PTS={8:-2,9:-1,10:0,11:1,12:2,13:3,14:4,15:6,16:8,17:11,18:14};
+const nova=s=>{const o=Object.assign(novo(),{sys:s});if(s=='t20'){Object.assign(o,{tar:'0|0',tes:'0|0',atk:[{}]});AB.forEach(a=>o['ta_'+a[0]]=10)}if(s=='fu')Object.assign(o,{nivel:5,fxp:0,fp:0,fd_dex:'8',fd_ins:'8',fd_mig:'8',fd_wlp:'8',arf:'none',esf:'none',fcl:[{},{}],fsp:[{}]});if(s=='al')Object.assign(o,{al_for:3,al_agi:3,al_per:3,al_emp:3,alw:[{}]});return o};
+$('tcl').innerHTML=Object.keys(CL).map(c=>`<option value="${c}">`).join('');
+function sugT(){const c=CL[S.classe];if(!c)return null;const lv=Math.min(20,Math.max(1,num(S.nivel)||1)),con=Math.floor((num(S.ta_con)+num(S.tb_con)-10)/2);return{pv:c[0]+con+(lv-1)*(c[1]+con),pm:lv*c[2]}}
+$('spv').onclick=()=>{const g=sugT();if(g){S.pvM=g.pv;bind();calc();save()}};
+$('spm').onclick=()=>{const g=sugT();if(g){S.pmM=g.pm;bind();calc();save()}};
+$('tab').innerHTML=AB.map(([k,n])=>`<div class="card ab"><div class="top"><span class="n">${n}</span><div class="stp"><button data-st2="ta_${k}:-1">−</button><input type="number" inputmode="numeric" data-k="ta_${k}" onfocus="this.select()"><button data-st2="ta_${k}:1">+</button></div><span class="mod" id="tm_${k}">+0</span></div><div class="row" style="margin-bottom:6px"><div><label>Racial / outros</label><input type="number" data-k="tb_${k}"></div><div class="stat"><b id="tt_${k}">10</b><span>Valor final</span></div></div>${TS.map(([nm,kk,f],i)=>kk!=k?'':`<div class="r"><input type="checkbox" data-k="tr_${i}" style="width:auto"><span class="nm">${f.includes('o')?`<input data-k="ofn_${i}" placeholder="Ofício (___)" style="width:110px;padding:2px 4px">`:nm}${f.includes('a')?' †':''}${f.includes('t')?' *':''}<br><small id="tsd_${i}" style="color:var(--mut);font-size:11px"></small></span><input type="number" data-k="to_${i}" style="width:46px;padding:2px 4px" title="Outros bônus"><span class="v" id="tst_${i}">0</span></div>`).join('')}</div>`).join('');
+function rowsT(){if(S.sys!='t20')return;if(!S.atk)S.atk=[{}];
+ $('tatk').innerHTML=S.atk.map((w,i)=>`<tr data-a="atk" data-i="${i}"><td><input data-a="1" data-f="n" value="${esc(w.n)}"></td><td><select data-a="1" data-f="p"><option>Luta</option><option${w.p=='Pontaria'?' selected':''}>Pontaria</option></select></td><td><input type="number" style="width:56px" data-a="1" data-f="x" value="${esc(w.x)}"></td><td class="c"><b class="ta">+0</b></td><td><input data-a="1" data-f="d" placeholder="1d8+2" value="${esc(w.d)}"></td><td><input style="width:72px" data-a="1" data-f="c" placeholder="19/x2" value="${esc(w.c)}"></td><td><input data-a="1" data-f="t" value="${esc(w.t)}"></td><td><input data-a="1" data-f="al" value="${esc(w.al)}"></td><td><button class="x" data-rm="atk:${i}">✕</button></td></tr>`).join('')}
+$('tadd').onclick=()=>{S.atk.push({});rowsT();calc();save()};
+function calcT(){const lv=Math.min(20,Math.max(1,num(S.nivel)||1)),h=Math.floor(lv/2),tb=lv>=15?6:lv>=7?4:2,m={},tot={};let sp=0,bad=0;
+ AB.forEach(([k])=>{const b=num(S['ta_'+k]),v=b+num(S['tb_'+k]);m[k]=Math.floor((v-10)/2);$('tm_'+k).textContent=fmt(m[k]);$('tt_'+k).textContent=v;if(PTS[b]===undefined)bad=1;else sp+=PTS[b]});
+ radar(m,'rad2');$('tpts').textContent=bad?'— (valores fora de 8–18)':sp+' / 20';
+ const sg=sugT();$('tpvh').textContent=sg?'Sugestão: '+sg.pv:'Sem sugestão (classe própria)';$('tpmh').textContent=sg?'Sugestão: '+sg.pm:'Sem sugestão (classe própria)';
+ const pr=(v,b,q)=>v=='custom'?[num(S[b]),Math.max(0,num(S[q]))]:(v||'0|0').split('|').map(Number),ar=pr(S.tar,'tarB','tarP'),es=pr(S.tes,'tesB','tesP'),pen=ar[1]+es[1];$('tarx').style.display=S.tar=='custom'?'':'none';$('tesx').style.display=S.tes=='custom'?'':'none';
+ $('tdef').textContent=10+m.des+ar[0]+es[0]+num(S.tdo);
+ $('tdd').textContent=`10 ${fmt(m.des)} (Des) ${fmt(ar[0])} (armadura) ${fmt(es[0])} (escudo) ${fmt(num(S.tdo))} (outros)`;
+ let nt=0;
+ TS.forEach(([n,k,f],i)=>{const tr=S['tr_'+i],a=f.includes('a')?pen:0,v=h+m[k]+(tr?tb:0)+num(S['to_'+i])-a;if(tr)nt++;tot[n]=v;
+  $('tst_'+i).textContent=fmt(v);
+  $('tsd_'+i).textContent=`½ nível ${h} ${fmt(m[k])} ${k.toUpperCase()}`+(tr?` +${tb} trein.`:'')+(a?` −${a} armadura`:'')+(f.includes('t')&&!tr?' · só treinada':'')});
+ $('ttrn').textContent=nt+' · Int '+fmt(m.int);
+ document.querySelectorAll('#tatk tr').forEach((tr,i)=>{const w=S.atk[i]||{};tr.querySelector('.ta').textContent=fmt(tot[w.p||'Luta']+num(w.x))})}
+/*CLASSES*/
+const CLS={Bárbaro:['Berserker','Coração Selvagem','Árvore do Mundo','Fanático'],Bardo:['Colégio da Dança','Colégio do Glamour','Colégio do Conhecimento','Colégio da Bravura'],Bruxo:['Patrono Arquifada','Patrono Celestial','Patrono Ínfero','Patrono Grande Antigo'],Clérigo:['Domínio da Vida','Domínio da Luz','Domínio da Trapaça','Domínio da Guerra'],Druida:['Círculo da Terra','Círculo da Lua','Círculo do Mar','Círculo das Estrelas'],Feiticeiro:['Mente Aberrante','Alma Mecânica','Feitiçaria Dracônica','Magia Selvagem'],Guardião:['Mestre das Feras','Andarilho Feérico','Caçador das Sombras','Caçador'],Guerreiro:['Mestre da Batalha','Campeão','Cavaleiro Místico','Guerreiro Psíquico'],Ladino:['Trapaceiro Arcano','Assassino','Lâmina da Alma','Ladrão'],Mago:['Abjurador','Adivinho','Evocador','Ilusionista'],Monge:['Guerreiro da Misericórdia','Guerreiro da Sombra','Guerreiro dos Elementos','Guerreiro da Mão Espalmada'],Paladino:['Devoção','Glória','Anciões','Vingança']};
+const HD={barbaro:12,guerreiro:10,paladino:10,guardiao:10,bardo:8,clerigo:8,druida:8,monge:8,ladino:8,bruxo:8,feiticeiro:6,mago:6};
+const RD=[['rage','Fúrias','barbaro','Bárbaro',L=>L>=17?6:L>=12?5:L>=6?4:L>=3?3:2,L=>`Dano da Fúria +${L>=16?4:L>=9?3:2} · curto: recupera 1 · longo: todas`],
+['sw','Retomar Fôlego','guerreiro','Guerreiro',L=>L>=10?4:L>=4?3:2,L=>`Ação bônus: cura 1d10 + ${L} · curto: recupera 1 · longo: todos`],
+['ki','Pontos de Foco','monge','Monge',L=>L>=2?L:0,(L,pb,w)=>L<2?'Disponível a partir do nível 2 de Monge':`CD de Foco ${8+pb+w} · Artes Marciais d${L>=17?12:L>=11?10:L>=5?8:6} · curto ou longo: todos`]];
+const RM={};
+const lvOf=n=>(S.cls||[]).filter(c=>nrm(c.n)==n).reduce((a,c)=>a+num(c.l),0);
+function rowsC(){if(S.sys&&S.sys!='dnd')return;if(!S.cls)S.cls=[{n:S.classe||'',l:num(S.nivel)||1,s:S.sub||''}];if(!S.ru)S.ru={};
+ const names=Object.keys(CLS);
+ $('clb').innerHTML=S.cls.map((w,i)=>`<tr data-a="cls" data-i="${i}"><td style="padding:6px 0;border-top:1px dotted var(--line)"><div class="row"><div style="flex:2"><label>Classe</label><select data-a="1" data-f="n"><option value="">—</option>${names.map(n=>`<option${w.n==n?' selected':''}>${n}</option>`).join('')}${w.n&&!names.includes(w.n)?`<option selected>${esc(w.n)}</option>`:''}</select></div><div style="flex:3"><label>Subclasse</label><input list="dsub${i}" data-a="1" data-f="s" value="${esc(w.s)}"><datalist id="dsub${i}">${(CLS[w.n]||[]).map(s=>`<option value="${s}">`).join('')}</datalist></div><div><label>Nível</label><input type="number" min="1" max="20" data-a="1" data-f="l" value="${esc(w.l)}"></div><button class="x" data-rm="cls:${i}" style="flex:0 0 auto;min-width:0">✕</button></div></td></tr>`).join('')}
+$('cladd').onclick=()=>{S.cls.push({l:1});rowsC();calc();save()};
+function calcC(){if(S.sys&&S.sys!='dnd')return;S.cls=S.cls||[];S.ru=S.ru||{};
+ const cl=S.cls,tot=cl.reduce((a,c)=>a+num(c.l),0),named=cl.filter(c=>c.n);
+ S.classe=named.map(c=>named.length>1?c.n+' '+num(c.l):c.n).join(' / ');S.sub=named.map(c=>c.s).filter(Boolean).join(' / ');
+ [['classe',S.classe],['sub',S.sub]].forEach(([k,v])=>{const e=document.querySelector('#sheet [data-k="'+k+'"]');if(e)e.value=v});
+ $('clsum').textContent='Soma dos níveis das classes: '+tot+' · Nível total da ficha: '+(num(S.nivel)||1)+' (editável no topo)';
+ const pb=Math.ceil(Math.min(20,S.nivel)/4)+1,w=mod(num(S.a_sab));
+ const hd={};cl.forEach(c=>{const d=HD[nrm(c.n)];if(d)hd[d]=(hd[d]||0)+num(c.l)});
+ $('dvh').textContent=Object.keys(hd).length?'Sugestão: '+Object.keys(hd).sort((a,b)=>b-a).map(d=>hd[d]+'d'+d).join(' + '):'';
+ const ex=Math.max(0,num(S.exaus)),eh=$('exh');eh.textContent=ex>=6?'☠ 6 = MORTE':ex>0?'Testes de d20 −'+ex*2+' · Deslocamento −'+(ex*1.5)+' m · 6 = morte':'Nível 0–5 · 6 = morte';eh.style.color=ex>=6?'#e8473d':'var(--mut)';eh.style.fontWeight=ex>=6?'700':'400';
+ let h='';
+ RD.forEach(([k,nm,c,cn,mxf,inf])=>{const L=lvOf(c);if(!L){RM[k]=0;return}
+  const ex=num((S.rx||{})[k]),bs=mxf(L),mx=bs+ex;RM[k]=mx;const rem=mx-Math.min(mx,num(S.ru[k]));
+  h+=`<div style="padding:8px 0;border-top:1px dotted var(--line)"><div style="display:flex;justify-content:space-between;gap:8px"><b>${nm} <small style="color:var(--mut)">(${cn} ${L})</small></b><b>${mx?'Restam '+rem+' / '+mx:'—'}</b></div>${mx?`<div style="margin:4px 0">${Array.from({length:mx},(_,i)=>`<span class="bub${i<rem?' f':''}" data-ru="${k}:${i}"></span>`).join('')}</div>`:''}<div class="stp" style="margin:4px 0"><button data-rx="${k}:-1">−</button><button data-rx="${k}:1">+</button><small style="color:var(--mut)">Extras (itens/bônus): <b>${ex}</b> · base ${bs}</small></div><small style="color:var(--mut)">${inf(L,pb,w)}</small></div>`});
+ $('resb').innerHTML=h||'<small style="color:var(--mut)">Escolha Bárbaro, Guerreiro ou Monge para ver os usos de Fúria, Retomar Fôlego e Pontos de Foco.</small>'}
+$('rsh').onclick=()=>{Object.keys(RM).forEach(k=>{S.ru[k]=k=='ki'?0:Math.max(0,num(S.ru[k])-1)});calc();save()};
+$('rlg').onclick=()=>$('cura').click();
+/*CONDICOES*/
+const CND=[
+['Agarrado',['Deslocamento 0.|Seu deslocamento é reduzido a 0 e não pode ser aumentado.','Ataques Afetados.|Você tem desvantagem em jogadas de ataque contra qualquer alvo que não seja quem está lhe agarrando.','Móvel.|Quem o agarrou pode arrastar ou carregar você quando se move, mas cada metro de movimento custa 1 metro adicional, a menos que você seja Minúsculo ou dois ou mais tamanhos menores que o agarrador.']],
+['Amedrontado',['Testes de Atributo e Ataques Afetados.|Você tem desvantagem em testes de atributo e jogadas de ataque enquanto a fonte do medo estiver em sua linha de visão.','Não se Aproxima.|Você não pode se aproximar voluntariamente da fonte do medo.']],
+['Atordoado',['Incapacitado.|Você tem a condição Incapacitado.','Salvaguardas Afetadas.|Você falha automaticamente em salvaguardas de Força e Destreza.','Ataques Afetados.|Jogadas de ataque contra você têm vantagem.']],
+['Caído',['Movimento Restrito.|Suas únicas opções de movimento são rastejar ou gastar uma quantidade de movimento equivalente à metade do seu deslocamento (arredondado para baixo) para se levantar, encerrando assim a condição. Se seu deslocamento for 0, você não pode se levantar.','Ataques Afetados.|Você tem desvantagem em jogadas de ataque. Uma jogada de ataque contra você tem vantagem se o atacante estiver a até 1,5 metro. Caso contrário, a jogada de ataque tem desvantagem.']],
+['Cego',['Não Consegue Enxergar.|Você não consegue enxergar e falha automaticamente em qualquer teste de atributo que dependa da visão.','Ataques Afetados.|Jogadas de ataque contra você têm vantagem, e suas jogadas de ataque têm desvantagem.']],
+['Contido',['Deslocamento 0.|Seu deslocamento é reduzido a 0 e não pode ser aumentado.','Ataques Afetados.|Jogadas de ataque contra você têm vantagem, e suas jogadas de ataque têm desvantagem.','Salvaguardas Afetadas.|Você tem desvantagem em salvaguardas de Destreza.']],
+['Enfeitiçado',['Não Pode Ferir Enfeitiçador.|Você não pode atacar ou escolher quem enfeitiçou como alvo de habilidades ou efeitos mágicos danosos.','Vantagem Social.|Quem enfeitiçou tem vantagem em qualquer teste de atributo para interagir socialmente com você.']],
+['Envenenado',['Testes de Atributo e Ataques Afetados.|Você tem desvantagem em jogadas de ataque e testes de atributo.']],
+['Exaustão',['Níveis de Exaustão.|Esta condição é cumulativa. Cada vez que a recebe, você ganha 1 nível de exaustão. Caso seu nível de exaustão chegue a 6, você morre.','Testes de D20 Afetados.|Ao fazer um teste de d20, a jogada é reduzida em 2 vezes seu nível de exaustão.','Deslocamento Reduzido.|Seu deslocamento é reduzido em um número de metros igual a 1,5 vez seu nível de exaustão.','Removendo Níveis de Exaustão.|Terminar um descanso longo remove 1 nível de exaustão. A condição se encerra quando seu nível de exaustão chega a 0.','Nível atual.|Use o campo "Exaustão" no topo da ficha; com nível 1 ou mais, esta condição conta como ativa.']],
+['Incapacitado',['Inativo.|Você não pode executar nenhuma ação, ação bônus ou reação.','Sem Concentração.|Sua concentração é interrompida.','Sem Fala.|Você não pode falar.','Surpreso.|Se estiver incapacitado ao jogar sua iniciativa, você tem desvantagem na jogada.']],
+['Inconsciente',['Inerte.|Você fica com as condições Incapacitado e Caído, e solta tudo o que estiver segurando. Quando esta condição é encerrada, você continua caído.','Deslocamento 0.|Seu deslocamento é reduzido a 0 e não pode ser aumentado.','Ataques Afetados.|Jogadas de ataque contra você têm vantagem.','Salvaguardas Afetadas.|Você falha automaticamente em salvaguardas de Força e Destreza.','Acertos Críticos Automáticos.|Qualquer jogada de ataque bem-sucedida contra você é um acerto crítico se o atacante estiver a até 1,5 metro.','Alheio.|Você não tem consciência do que está ao seu redor.']],
+['Invisível',['Surpresa.|Se estiver invisível ao jogar sua iniciativa, você tem vantagem na jogada.','Oculto.|Você não é afetado por nenhum efeito que exija que o alvo seja visto, a menos que o criador do efeito possa vê-lo de alguma forma. Qualquer equipamento que você esteja vestindo ou carregando também fica oculto.','Ataques Afetados.|Jogadas de ataque contra você têm desvantagem, e suas jogadas de ataque têm vantagem. Se uma criatura puder vê-lo de alguma forma, você não ganha esse benefício contra essa criatura.']],
+['Paralisado',['Incapacitado.|Você tem a condição Incapacitado.','Deslocamento 0.|Seu deslocamento é reduzido a 0 e não pode ser aumentado.','Salvaguardas Afetadas.|Você falha automaticamente em salvaguardas de Força e Destreza.','Ataques Afetados.|Jogadas de ataque contra você têm vantagem.','Acertos Críticos Automáticos.|Qualquer jogada de ataque bem-sucedida contra você é um acerto crítico se o atacante estiver a até 1,5 metro.']],
+['Petrificado',['Transformado em Substância Inanimada.|Você é transformado, junto com qualquer objeto não mágico que esteja vestindo ou carregando, em uma substância sólida inanimada (geralmente pedra). Seu peso aumenta por um fator de dez e você para de envelhecer.','Incapacitado.|Você tem a condição Incapacitado.','Deslocamento 0.|Seu deslocamento é reduzido a 0 e não pode ser aumentado.','Ataques Afetados.|Jogadas de ataque contra você têm vantagem.','Salvaguardas Afetadas.|Você falha automaticamente em salvaguardas de Força e Destreza.','Resistência a Dano.|Você tem Resistência a todos os tipos de dano.','Imunidade a Veneno.|Você tem Imunidade à condição Envenenado.']],
+['Surdo',['Não Consegue Ouvir.|Você não consegue ouvir e falha automaticamente em qualquer teste de atributo que dependa da audição.']]];
+$('cnd').innerHTML='<div class="card"><h2>Condições ativas</h2><p id="cdsum" style="margin:0"></p></div><div class="cols" style="align-items:start">'+CND.map(([n,ef],i)=>`<div class="card cdc"><div class="row" style="align-items:center;margin-bottom:6px"><label style="text-transform:none;font-size:16px;color:var(--ink);flex:2"><input type="checkbox" data-k="cd_on_${i}" style="width:auto"> <b>${n}</b></label><div><label>Duração</label><input data-k="cd_du_${i}" placeholder="Ex: 3 rodadas"></div></div>${ef.map(e=>{const[t,x]=e.split('|');return `<p style="margin:4px 0;font-size:14px"><b>${t}</b> ${x}</p>`}).join('')}</div>`).join('')+'</div>';
+function calcCd(){if(S.sys&&S.sys!='dnd')return;const ex=num(S.exaus),a=[],cs=document.querySelectorAll('.cdc');
+ CND.forEach(([n],i)=>{const exa=n=='Exaustão'&&ex>0,on=!!S['cd_on_'+i]||exa;if(cs[i])cs[i].classList.toggle('cdon',on);if(on){const d=S['cd_du_'+i];a.push(n+(exa?' (nível '+ex+')':'')+(d?' — '+d:''))}});
+ $('cdsum').textContent=a.length?a.join(' · '):'Nenhuma condição ativa.'}
+/*AL*/
+const XH=`<div class="card"><h2>Inventário</h2><div class="tbl"><table style="min-width:0"><thead><tr><th>Item</th><th style="width:70px">Qtd</th><th>Observações</th><th></th></tr></thead><tbody class="invb"></tbody></table></div><button class="add invadd">+ Item</button></div>
+<div class="card"><h2>Buffs de alimentação</h2><div class="tbl"><table style="min-width:0"><thead><tr><th>Alimento</th><th>Buff / efeito</th><th style="width:110px">Duração</th><th></th></tr></thead><tbody class="bufb"></tbody></table></div><button class="add bufadd">+ Buff</button></div>
+<div class="card"><h2>Anotações extras</h2><textarea data-k="notas" style="min-height:160px"></textarea></div>`;
+document.querySelectorAll('.extras').forEach(e=>e.innerHTML=XH);
+['sheet','sheet2','sheet3','sheet4'].forEach(id=>{const c=document.querySelector('#'+id+' [data-k="nome"]').closest('.card');c.classList.add('hd');c.insertAdjacentHTML('afterbegin','<div class="av"><label title="Foto do personagem"><div class="foto"></div><input type="file" accept="image/*" class="fin" style="display:none"></label><button type="button" class="frm">Remover</button></div>')});
+function fotoUI(){document.querySelectorAll('.foto').forEach(f=>{f.style.backgroundImage=S.foto?`url("${S.foto}")`:'';f.textContent=S.foto?'':'+ Foto'});document.querySelectorAll('.av .frm').forEach(b=>b.style.display=S.foto?'':'none')}
+function rowsX(){if(!S.inv)S.inv=[{}];document.querySelectorAll('.invb').forEach(b=>b.innerHTML=S.inv.map((w,i)=>`<tr data-a="inv" data-i="${i}"><td><input data-a="1" data-f="n" value="${esc(w.n)}"></td><td><input type="number" style="width:70px" data-a="1" data-f="q" value="${esc(w.q)}"></td><td><input data-a="1" data-f="o" value="${esc(w.o)}"></td><td><button class="x" data-rm="inv:${i}">✕</button></td></tr>`).join(''));if(!S.buf)S.buf=[{}];document.querySelectorAll('.bufb').forEach(b=>b.innerHTML=S.buf.map((w,i)=>`<tr data-a="buf" data-i="${i}"><td><input data-a="1" data-f="n" value="${esc(w.n)}"></td><td><input data-a="1" data-f="o" value="${esc(w.o)}"></td><td><input data-a="1" data-f="d" placeholder="1 h" value="${esc(w.d)}"></td><td><button class="x" data-rm="buf:${i}">✕</button></td></tr>`).join(''));fotoUI()}
+document.addEventListener('change',e=>{const t=e.target;if(!t.classList||!t.classList.contains('fin')||!t.files[0])return;const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const r=Math.min(1,360/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext('2d').drawImage(im,0,0,c.width,c.height);S.foto=c.toDataURL('image/jpeg',.82);t.value='';fotoUI();save()};im.src=fr.result};fr.readAsDataURL(t.files[0])});
+document.addEventListener('click',e=>{const t=e.target;if(t.classList.contains('frm')){S.foto='';fotoUI();save()}if(t.classList.contains('invadd')){S.inv=S.inv||[];S.inv.push({});rowsX();save()}if(t.classList.contains('bufadd')){S.buf=S.buf||[];S.buf.push({});rowsX();save()}});
+const AAT=[['for','Força'],['agi','Agilidade'],['per','Perspicácia'],['emp','Empatia']];
+const ASK=[['Combate Corpo a Corpo','for'],['Maquinário Pesado','for'],['Resistência','for'],['Combate à Distância','agi'],['Mobilidade','agi'],['Pilotagem','agi'],['Observação','per'],['Sobrevivência','per'],['Tecnologia','per'],['Comando','emp'],['Manipulação','emp'],['Ajuda Médica','emp']];
+$('acars').innerHTML=['Colono','Fuzileiro Colonial','Agente da Companhia','Criança','Médico','Oficial','Piloto','Operário','Cientista'].map(c=>`<option value="${c}">`).join('');
+$('adist').innerHTML=['Engajado','Curto','Médio','Longo','Extremo'].map(c=>`<option value="${c}">`).join('');
+$('aat').innerHTML=AAT.map(([k,n])=>`<div class="card ab"><div class="top"><span class="n">${n}</span><div class="stp"><button data-st2="al_${k}:-1">−</button><input type="number" inputmode="numeric" data-k="al_${k}" onfocus="this.select()"><button data-st2="al_${k}:1">+</button></div></div>${ASK.map(([nm,kk],i)=>kk!=k?'':`<div class="r"><span class="nm">${nm}<br>${[1,2,3,4,5].map(v=>`<span class="bub" data-lv="als_${i}:${v}"></span>`).join('')}</span><input type="number" data-k="alm_${i}" style="width:46px;padding:2px 4px" title="Modificador de equipamento"><span class="v" id="ap_${i}">0</span></div>`).join('')}</div>`).join('');
+$('aeq').innerHTML=Array.from({length:10},(_,i)=>`<div class="row" style="margin-bottom:4px;align-items:center"><span style="flex:0 0 24px;min-width:0;color:var(--mut)">${i+1}</span><input data-k="aeq_${i}"></div>`).join('');
+function rowsA(){if(S.sys!='al')return;if(!S.alw)S.alw=[{}];
+ $('alw').innerHTML=S.alw.map((w,i)=>`<tr data-a="alw" data-i="${i}"><td><input data-a="1" data-f="n" value="${esc(w.n)}"></td><td><input style="width:64px" data-a="1" data-f="b" value="${esc(w.b)}"></td><td><input style="width:64px" data-a="1" data-f="d" value="${esc(w.d)}"></td><td><input list="adist" data-a="1" data-f="r" value="${esc(w.r)}"></td><td><button class="x" data-rm="alw:${i}">✕</button></td></tr>`).join('')}
+$('aadd').onclick=()=>{S.alw.push({});rowsA();calc();save()};
+const bxs=(id,key,n,cur)=>{$(id).innerHTML=Array.from({length:n},(_,i)=>`<span class="bx${i<cur?' f':''}" data-bx="${key}:${i}"></span>`).join('')};
+function radarA(v){const mx=Math.max(5,...Object.values(v)),ord=[['for','Força'],['per','Perspicácia'],['emp','Empatia'],['agi','Agilidade']],R=90,pt=(i,r)=>{const a=-Math.PI/2+i*Math.PI/2;return[(150+r*Math.cos(a)).toFixed(1),(135+r*Math.sin(a)).toFixed(1)]};let g='';
+ for(let k=1;k<=mx;k++)g+=`<polygon points="${ord.map((_,i)=>pt(i,R*k/mx).join(',')).join(' ')}" fill="none" style="stroke:var(--line)"/>`;
+ ord.forEach(([k,n],i)=>{const e=pt(i,R),l=pt(i,R+26);g+=`<line x1="150" y1="135" x2="${e[0]}" y2="${e[1]}" style="stroke:var(--line)"/><text x="${l[0]}" y="${l[1]}" text-anchor="middle" font-size="11" style="fill:var(--mut)">${n}<tspan x="${l[0]}" dy="15" font-size="14" font-weight="700" style="fill:var(--ink)">${v[k]}</tspan></text>`});
+ g+=`<polygon points="${ord.map(([k],i)=>pt(i,R*Math.min(mx,v[k])/mx).join(',')).join(' ')}" fill-opacity=".25" stroke-width="2" style="fill:var(--acc);stroke:var(--acc)"/>`;$('rada').innerHTML=g}
+function calcA(){const v={};let sa=0,ss=0;AAT.forEach(([k])=>{v[k]=num(S['al_'+k]);sa+=v[k]});radarA(v);$('apts').textContent=sa;
+ ASK.forEach(([n,k],i)=>{const l=num(S['als_'+i]);ss+=l;$('ap_'+i).textContent=v[k]+l+num(S['alm_'+i])});$('asp').textContent=ss;
+ document.querySelectorAll('[data-lv]').forEach(b=>{const[k,x]=b.dataset.lv.split(':');b.classList.toggle('f',num(S[k])>=+x)});
+ const vm=Math.min(15,Math.max(0,v.for+num(S.avO)));$('avm').textContent=vm;bxs('avit','avit',vm,S.avit===undefined||S.avit===''?vm:Math.min(vm,num(S.avit)));
+ bxs('astr','astr',10,num(S.astr));bxs('arad','arad',10,num(S.arad));bxs('axp','axp',10,num(S.axp));bxs('aph','aph',3,num(S.aph));$('astn').textContent=num(S.astr);
+ const cap=v.for*2,car=num(S.acarga);$('acap').textContent=cap;$('acst').textContent=car>cap*2?'Acima do limite: você não consegue carregar tudo isso.':car>cap?'Sobrecarregado (até '+cap*2+' itens): teste de Mobilidade para correr ou engatinhar.':'Itens normais contam 1, pesados 2 ou mais, leves meio item e minúsculos não contam.';
+ S.classe=S.acar||'';S.esp=''}
+/*FU*/const FD=[6,8,10,12],FA=[['dex','Destreza'],['ins','Intuição'],['mig','Vigor'],['wlp','Vontade']];
+const FC=[['lento','Lento',{dex:1}],['conf','Confuso',{ins:1}],['fraco','Fraco',{mig:1}],['abal','Abalado',{wlp:1}],['enf','Enfurecido',{dex:1,ins:1}],['env','Envenenado',{mig:1,wlp:1}]];
+const FARL=[['none','Sem armadura',[null,0,0,0]],['camisa','Camisa de seda (M.Def +2, Init −1)',[null,0,2,-1]],['traje','Traje de viagem (Def +1, M.Def +1, Init −1)',[null,1,1,-1]],['tunica','Túnica de combate (Def +1, M.Def +1)',[null,1,1,0]],['manto','Manto sábio (Def +1, M.Def +2, Init −2)',[null,1,2,-2]],['brig','Brigandina — marcial (Def 10, Init −2)',[10,0,0,-2]],['bronze','Placa de bronze — marcial (Def 11, Init −3)',[11,0,0,-3]],['runica','Placa rúnica — marcial (Def 11, M.Def +1, Init −3)',[11,0,1,-3]],['aco','Placa de aço — marcial (Def 12, Init −4)',[12,0,0,-4]],['custom','Outro (personalizada)',null]];
+const FESL=[['none','Nenhum',[0,0,0]],['bronze','Escudo de bronze (Def +2)',[2,0,0]],['runico','Escudo rúnico — marcial (Def +2, M.Def +2)',[2,2,0]],['custom','Outro (personalizado)',null]];
+const FCL=['Arcanista','Quimerista','Lâmina Escura','Elementalista','Entropista','Fúria','Guardião','Mestre da Tradição','Orador','Ladino','Atirador','Espírita','Funileiro','Viajante','Mestre de Armas'];
+const FDS=['Arcanismo','Quimerismo','Elementalismo','Entropismo','Ritualismo','Espiritismo'];
+const FB={arcanista:{pm:5},arcanist:{pm:5},quimerista:{pm:5},chimerist:{pm:5},'lamina escura':{pv:5},darkblade:{pv:5},elementalista:{pm:5},elementalist:{pm:5},entropista:{pm:5},entropist:{pm:5},furia:{pv:5},fury:{pv:5},guardiao:{pv:5},guardian:{pv:5},'mestre da tradicao':{pm:5},loremaster:{pm:5},orador:{pm:5},orator:{pm:5},ladino:{pi:2},rogue:{pi:2},'por conta propria':{pi:2},atirador:{pv:5},'atirador afiado':{pv:5},sharpshooter:{pv:5},espirita:{pm:5},spiritist:{pm:5},funileiro:{pi:2},tinkerer:{pi:2},viajante:{pi:2},wayfarer:{pi:2},'mestre de armas':{pv:5},'mestre das armas':{pv:5},weaponmaster:{pv:5}};
+const nrm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+$('fcls').innerHTML=FCL.map(c=>`<option value="${c}">`).join('');
+$('farm').innerHTML=FARL.map(a=>`<option value="${a[0]}">${a[1]}</option>`).join('');
+$('fesc').innerHTML=FESL.map(a=>`<option value="${a[0]}">${a[1]}</option>`).join('');
+$('fatt').innerHTML=FA.map(([k,n])=>`<div class="stat"><span>${n} (base)</span><select data-k="fd_${k}">${FD.map(d=>`<option value="${d}">d${d}</option>`).join('')}</select><b id="fcur_${k}" style="font-size:16px">d8</b><span>dado atual</span></div>`).join('');
+$('fcond').innerHTML=FC.map(([c,n])=>`<label style="text-transform:none;font-size:14px;color:var(--ink);flex:0 0 auto"><input type="checkbox" data-k="c_${c}" style="width:auto"> ${n}</label>`).join('');
+$('fbonds').innerHTML=[0,1,2,3,4,5].map(i=>`<div class="card" style="margin:0"><label>Laço ${i+1}</label><input data-k="bn_${i}" placeholder="Nome / vínculo">${[['Admiração','Inferioridade'],['Lealdade','Suspeita'],['Afeição','Ódio']].map((q,j)=>`<select data-k="bs_${i}_${j}" style="margin-top:4px"><option value="">${q[0]} / ${q[1]}</option><option>${q[0]}</option><option>${q[1]}</option></select>`).join('')}<small style="color:var(--mut)">Força: <b id="bf_${i}">0</b></small></div>`).join('');
+$('frit').innerHTML=FDS.map((d,i)=>`<label style="text-transform:none;font-size:14px;color:var(--ink);flex:0 0 auto"><input type="checkbox" data-k="rd_${i}" style="width:auto"> ${d}</label>`).join('');
+$('feq').innerHTML=[['Acessório','ac'],['Armadura','am'],['Mão primária','mp'],['Mão secundária','ms']].map(([n,k])=>`<div class="row" style="margin-bottom:6px"><div><label>${n}</label><input data-k="eq_${k}_n"></div><div style="flex:3"><label>Descrição</label><input data-k="eq_${k}_d"></div></div>`).join('');
+function rowsF(){if(S.sys!='fu')return;if(!S.fcl)S.fcl=[{}];if(!S.fsp)S.fsp=[{}];
+ $('fcl').innerHTML=S.fcl.map((w,i)=>`<tr data-a="fcl" data-i="${i}"><td style="padding:8px 0;border-top:1px dotted var(--line)"><div class="row"><div style="flex:3"><label>Classe</label><input list="fcls" data-a="1" data-f="n" value="${esc(w.n)}"></div><div><label>Nível</label><input type="number" data-a="1" data-f="l" value="${esc(w.l)}"></div><button class="x" data-rm="fcl:${i}" style="flex:0 0 auto;min-width:0">✕</button></div><label style="margin-top:6px">Benefícios gratuitos</label><input data-a="1" data-f="b" value="${esc(w.b)}"><label style="margin-top:6px">Detalhes das habilidades</label><textarea data-a="1" data-f="d" style="min-height:90px">${esc(w.d)}</textarea></td></tr>`).join('');
+ $('fsp').innerHTML=S.fsp.map((w,i)=>`<tr data-a="fsp" data-i="${i}"><td style="padding:8px 0;border-top:1px dotted var(--line)"><div class="row"><div style="flex:3"><label>Nome</label><input data-a="1" data-f="n" value="${esc(w.n)}"></div><div><label>PM</label><input data-a="1" data-f="pm" value="${esc(w.pm)}"></div><div><label>Alvos</label><input data-a="1" data-f="al" value="${esc(w.al)}"></div><div><label>Duração</label><input data-a="1" data-f="du" value="${esc(w.du)}"></div><button class="x" data-rm="fsp:${i}" style="flex:0 0 auto;min-width:0">✕</button></div><textarea data-a="1" data-f="d" style="min-height:70px;margin-top:6px" placeholder="Descrição">${esc(w.d)}</textarea></td></tr>`).join('')}
+$('fcladd').onclick=()=>{S.fcl.push({});rowsF();calc();save()};
+$('fspadd').onclick=()=>{S.fsp.push({});rowsF();calc();save()};
+function sugF(){const seen={},r={pv:0,pm:0,pi:0};(S.fcl||[]).forEach(c=>{const k=nrm(c.n);if(k&&!seen[k]&&FB[k]){seen[k]=1;for(const x in FB[k])r[x]+=FB[k][x]}});return r}
+$('fap').onclick=()=>{const g=sugF();S.pvO=g.pv;S.pmO=g.pm;S.piO=g.pi;bind();calc();save()};
+$('fup').onclick=()=>{if(num(S.fxp)>=10){S.fxp=num(S.fxp)-10;S.nivel=Math.min(50,num(S.nivel)+1);bind();calc();save()}};
+function radarF(base,cur){const R=90,pt=(i,r)=>{const a=-Math.PI/2+i*Math.PI/2;return[(150+r*Math.cos(a)).toFixed(1),(135+r*Math.sin(a)).toFixed(1)]},rad=v=>R*(v-2)/10,poly=f=>FA.map(([k],i)=>pt(i,rad(f(k))).join(',')).join(' ');let g='';
+ [6,8,10,12].forEach(v=>g+=`<polygon points="${FA.map((_,i)=>pt(i,rad(v)).join(',')).join(' ')}" fill="none" style="stroke:var(--line)"/><text x="153" y="${(135-rad(v)-2).toFixed(1)}" font-size="9" style="fill:var(--mut)">d${v}</text>`);
+ FA.forEach(([k,n],i)=>{const e=pt(i,R),l=pt(i,R+26);g+=`<line x1="150" y1="135" x2="${e[0]}" y2="${e[1]}" style="stroke:var(--line)"/><text x="${l[0]}" y="${l[1]}" text-anchor="middle" font-size="11" style="fill:var(--mut)">${n}<tspan x="${l[0]}" dy="14" font-size="13" font-weight="700" style="fill:var(--ink)">d${cur[k]}</tspan>${cur[k]!=base[k]?`<tspan x="${l[0]}" dy="12" font-size="10" style="fill:var(--mut)">base d${base[k]}</tspan>`:''}</text>`});
+ g+=`<polygon points="${poly(k=>base[k])}" fill="none" stroke-dasharray="4 3" stroke-width="1.5" style="stroke:var(--mut)"/><polygon points="${poly(k=>cur[k])}" fill-opacity=".3" stroke-width="2" style="fill:var(--acc);stroke:var(--acc)"/>`;
+ $('radf').innerHTML=g}
+function calcF(){const lv=num(S.nivel),cur={},base={};
+ FA.forEach(([k])=>{const bi=FD.indexOf(num(S['fd_'+k])),b=bi<0?1:bi;let dec=0;FC.forEach(([c,,e])=>{if(S['c_'+c])dec+=e[k]||0});
+  base[k]=FD[b];cur[k]=FD[Math.max(0,b-dec)];$('fcur_'+k).textContent='d'+cur[k]+(cur[k]!=base[k]?' (reduzido)':'')});
+ const pv=base.mig*5+lv+num(S.pvO),pm=base.wlp*5+lv+num(S.pmO),pi=6+num(S.piO),cr=Math.floor(pv/2);
+ $('fpvm').textContent=pv;$('fpmm').textContent=pm;$('fpim').textContent=pi;
+ const em=S.fpvA!==undefined&&S.fpvA!==''&&num(S.fpvA)<=cr;$('fcrise').textContent='Crise: '+cr+' PV'+(em?' — EM CRISE':'');
+ const ar=S.arf=='custom'?[S.arF===''||S.arF==null?null:num(S.arF),num(S.arD),num(S.arM),num(S.arI)]:((FARL.find(a=>a[0]==S.arf)||FARL[0])[2]),es=S.esf=='custom'?[num(S.esD),num(S.esM),num(S.esI)]:((FESL.find(a=>a[0]==S.esf)||FESL[0])[2]);
+ $('farx').style.display=S.arf=='custom'?'':'none';$('fesx').style.display=S.esf=='custom'?'':'none';
+ $('fdef').textContent=(ar[0]==null?cur.dex:ar[0])+ar[1]+es[0]+num(S.fod);
+ $('fmdef').textContent=cur.ins+ar[2]+es[1]+num(S.fom);
+ $('fini').textContent=ar[3]+es[2]+num(S.foi);
+ for(let i=0;i<6;i++){let n=0;for(let j=0;j<3;j++)if(S['bs_'+i+'_'+j])n++;$('bf_'+i).textContent=n}
+ const sl=(S.fcl||[]).reduce((a,c)=>a+num(c.l),0);$('fsl').textContent='Soma dos níveis das classes: '+sl+(sl&&sl!=lv?' (nível de personagem: '+lv+')':'');
+ const g=sugF();$('fsug').textContent='Sugestão: PV +'+g.pv+' · PM +'+g.pm+' · PI +'+g.pi;
+ radarF(base,cur);S.classe=(S.fcl||[]).map(c=>c.n).filter(Boolean).join(' / ');S.esp=S.fori||''}
+function calc(){if(S.sys=='al'){calcA();return}if(S.sys=='fu'){calcF();return}if(S.sys=='t20'){calcT();return}
+ calcC();calcCd();const lv=Math.min(20,Math.max(1,num(S.nivel)||1)),pb=Math.ceil(lv/4)+1,m={};
+ $('pb').textContent=fmt(pb);
+ AB.forEach(([k])=>{m[k]=mod(num(S['a_'+k]));$('m_'+k).textContent=fmt(m[k]);
+  $('sv_'+k).textContent=fmt(m[k]+(S.sv[k]?pb:0));document.querySelector(`[data-sv=${k}]`).className='pip'+(S.sv[k]?' p1':'');});
+ radar(m);let pm=0;
+ SK.forEach(([n,k])=>{const p=S.sk[n]||0,v=m[k]+p*pb;$('sk_'+n).textContent=fmt(v);document.querySelector(`[data-sk="${n}"]`).className='pip'+(p?' p'+p:'');if(n=='Percepção')pm=v});
+ const ab=num(S.armBase),A=S.arm||'none',d=m.des;
+ let ca={none:10+d,leve:ab+d,media:ab+Math.min(d,2),pesada:ab,barb:10+d+m.con,monge:10+d+m.sab}[A];
+ ca+=(S.esc?2:0)+num(S.caMisc);$('ca').textContent=ca;
+ $('ini').textContent=fmt(d+num(S.iniMisc));$('pp').textContent=10+pm;
+ $('dss').innerHTML=bubs(3,num(S.dsS),'data-ds="dsS" data-i');$('dsf').innerHTML=bubs(3,num(S.dsF),'data-ds="dsF" data-i');
+ const cm=S.castAb?m[S.castAb]:0;$('cmod').textContent=fmt(cm);$('ccd').textContent=8+pb+cm;$('catk').textContent=fmt(pb+cm);
+ for(let i=1;i<=9;i++){const t=Math.min(9,num(S['slot'+i])),sp=Math.min(t,num(S.spent[i]));$('sb'+i).innerHTML=bubs(t,sp,'data-sp')}
+ document.querySelectorAll('#wb tr').forEach((tr,i)=>{const w=S.weapons[i],mm=w.ab?m[w.ab]:0,a=mm+(w.p?pb:0)+num(w.x);
+  tr.querySelector('.wa').textContent=fmt(a);const dm=mm+num(w.x)*0;tr.querySelector('.wd').textContent=w.d?(w.d.replace(/\s/g,'')+(dm?fmt(dm):'')):''});
+ $('tot').textContent=(num(S.pc)/100+num(S.pp2)/10+num(S.ce)/2+num(S.po)+num(S.pl)*10).toFixed(2).replace(/\.?0+$/,'')||0;
+}
+$('cura').onclick=()=>{S.dvG=0;S.dsS=0;S.dsF=0;S.hp=S.hpMax;S.spent={};S.ru={};bind();calc();save()};
+$('exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download=(S.nome||'personagem')+'.json';a.click()};
+$('imp').onclick=()=>$('file').click();
+$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const id='c'+Date.now();DB.chars[id]=Object.assign(novo(),JSON.parse(t));troca(id)}catch(x){alert('Arquivo inválido')}})};
+$('clr').onclick=()=>{if(confirm('Limpar os dados desta ficha?')){S=DB.chars[DB.cur]=nova(S.sys||'dnd');bind();rows();save()}};
+function mostra(b){const sy=S.sys||'dnd',ids={dnd:'sheet',t20:'sheet2',fu:'sheet3',al:'sheet4'};['sheet','sheet2','sheet3','sheet4'].forEach(i=>$(i).classList.toggle('hide',!b||ids[sy]!=i));$('home').classList.toggle('hide',b);document.documentElement.dataset.sys=b&&sy!='dnd'?sy:'';scrollTo(0,0);if(!b){DB.cur=null;refreshSel()}}
+function abre(id){DB.cur=id;S=DB.chars[id]=Object.assign(novo(),DB.chars[id]);bind();rows();save();mostra(true)}
+const troca=abre;
+document.addEventListener('click',e=>{const t=e.target,d=t.closest('[data-del]'),o=t.closest('[data-open]');
+ if(d){const id=d.dataset.del;if(!confirm('Excluir esta ficha?'))return;delete DB.chars[id];try{localStorage.setItem(LK,JSON.stringify(DB))}catch(x){}refreshSel();return}
+ if(o){abre(o.dataset.open);return}
+ if(t.closest('#newc')){$('modal').classList.remove('hide');return}
+ const sy=t.closest('#modal [data-sys]');if(sy){$('modal').classList.add('hide');const id='c'+Date.now();DB.chars[id]=nova(sy.dataset.sys);abre(id);return}
+ if(t.id=='back'||t.id=='back2'||t.id=='back3'||t.id=='back4'){save();mostra(false);return}
+ if(t.dataset.close!==undefined||t.id=='modal')$('modal').classList.add('hide')});
+refreshSel();
+
+bind();rows();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script></body></html>
