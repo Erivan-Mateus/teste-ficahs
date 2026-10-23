@@ -52,6 +52,11 @@ ul.log{padding-left:18px;color:var(--mut)}
 .map .block{opacity:.45}
 .map .block rect{fill:var(--line);stroke:var(--mut);stroke-dasharray:5 4}
 button:disabled{opacity:.5;cursor:not-allowed}
+.menu{text-align:center;padding-top:5vh}
+.menu h1{font-size:40px;margin:0 0 4px}
+.menu>.go,.menu>.alt{display:block;width:100%;max-width:320px;margin:12px auto;font-size:19px;padding:13px}
+.menu h2{margin-top:22px}
+.menu .card{text-align:left;align-items:center}
 details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
 summary{font-weight:700;cursor:pointer}
 .over{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9}
@@ -111,7 +116,7 @@ const f=n=>Math.round(n).toLocaleString("pt-BR");
 const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
 let S,tab="inv";
 
-function start(){S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:0,orders:[],noise:1,inc:0,sold:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
+function start(n){slot=n;view="game";S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:0,orders:[],noise:1,inc:0,sold:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
 function log(m){S.log.unshift("Turno "+S.turn+": "+m);S.log=S.log.slice(0,14)}
 function net(){return S.gold+S.stock*BASE+S.act.reduce((s,a)=>s+a.amt,0)-S.debts.reduce((s,d)=>s+d.amt,0)}
 function fill(){
@@ -246,7 +251,7 @@ function chooseShop(i){
 }
 function vCity(){
  const has=!!S.shop;
- let h="<h2>"+(has?"Sua cidade":"Escolha sua loja")+"</h2><div class='tag'>"+(has?"Você herdou a "+S.shop.n+". As outras lojas estão fechadas por enquanto.":"Você herdou uma loja na cidadezinha. Escolha uma para começar: é nela que você vai aprender o ofício.")+"</div>"+vMap()+"<div class='grid'>";
+ let h="<h2>"+(has?"Sua cidade":"Escolha sua loja")+"</h2><div class='tag'>"+(has?"Você herdou a "+S.shop.n+". As outras lojas estão fechadas por enquanto.":"Você herdou uma loja na cidadezinha. Escolha uma para começar: é nela que você vai aprender o ofício.")+"</div><div class='banner'><b>Estado da cidade: "+(S.ev?S.ev.n:"Tempos de paz")+"</b>"+(S.ev?" ("+S.ev.left+" turno(s) restantes). "+S.ev.t:". Tudo calmo por enquanto.")+"</div>"+vMap()+"<div class='grid'>";
  SHOPS.forEach((s,i)=>{
   const mine=has&&S.shop.id===s.id;
   h+=`<div class="card tile ${mine?"mine":""}${has&&!mine?" lock":""}"><div class="big">${has&&!mine?"🔒":s.i}</div><b>${s.n}</b><div class="tag">${s.t}</div>${!has?`<button class="go" onclick="chooseShop(${i})">Escolher</button>`:mine?'<div class="pos"><b>Sua loja</b></div>':'<div class="tag">À venda em breve</div>'}</div>`;
@@ -324,8 +329,10 @@ function vFaq(){
  return "<h2>Dúvidas</h2>"+q.map(x=>`<details><summary>${x[0]}</summary><p>${x[1]}</p></details>`).join("");
 }
 function render(){
+ if(view!=="game")return vMenu();
  const g=S.gold,left=g-LIMIT;
- let h=`<h1>Rei do Ouro</h1><div class="top"><div><small>Turno</small><b>${S.turn}</b></div><div><small>Ouro livre</small><b class="${g<0?"neg":""}">${f(g)}</b></div><div><small>Patrimônio (meta ${f(GOAL)})</small><b>${f(net())}</b></div></div>`;
+ let h=`<div class="row"><h1>Rei do Ouro</h1><button class="alt" onclick="menu()">Menu (jogo salvo)</button></div><div class="top"><div><small>Turno</small><b>${S.turn}</b></div><div><small>Ouro livre</small><b class="${g<0?"neg":""}">${f(g)}</b></div><div><small>Patrimônio (meta ${f(GOAL)})</small><b>${f(net())}</b></div></div>`;
+ if(!storeOk)h+='<div class="banner neg">Não foi possível salvar neste navegador. O progresso será perdido ao sair.</div>';
  if(S.ev)h+=`<div class="banner"><b>${S.ev.n}</b> (${S.ev.left} turno(s)): ${S.ev.t}</div>`;
  if(g<0&&!S.over)h+=`<div class="banner neg"><b>Perigo!</b> Faltam ${f(left)} de ouro para perder o jogo.</div>`;
  if(S.log[0])h+=`<div class="tag" style="margin-top:8px">Último aviso: ${S.log[0]}</div>`;
@@ -333,10 +340,37 @@ function render(){
  h+='<div class="tabs">'+T.map(t=>`<button class="${tab===t[0]?"on":""}" onclick="tab='${t[0]}';render()">${t[1]}</button>`).join("")+"</div>";
  h+={city:vCity,orders:vOrders,stock:vStock,inv:vInv,mkt:vMkt,debt:vDebt,faq:vFaq}[tab]();
  h+=`<button class="go turn" onclick="pass()">Passar turno (despesas: ${LIVING} de ouro)</button>`;
- if(S.over)h+=`<div class="over"><div><h1>${S.over==="win"?"Você venceu!":"Você faliu!"}</h1><p>${S.over==="win"?"Seu patrimônio chegou a "+f(net())+" em "+S.turn+" turnos.":"Seu ouro chegou a "+f(S.gold)+" no turno "+S.turn+"."}</p><button class="go" onclick="start()">Jogar de novo</button></div></div>`;
- $("app").innerHTML=h;
+ if(S.over)h+=`<div class="over"><div><h1>${S.over==="win"?"Você venceu!":"Você faliu!"}</h1><p>${S.over==="win"?"Seu patrimônio chegou a "+f(net())+" em "+S.turn+" turnos.":"Seu ouro chegou a "+f(S.gold)+" no turno "+S.turn+"."}</p><button class="go" onclick="start(slot)">Jogar de novo</button></div></div>`;
+ $("app").innerHTML=h;save();
 }
-start();
+const KEY="reiouro:slot:";
+let slot=0,view="menu",mode="",ask="",storeOk=true;
+function rd(n){try{const r=localStorage.getItem(KEY+n);return r?JSON.parse(r):null}catch(e){storeOk=false;return null}}
+function save(){if(view!=="game"||!S||!slot)return;try{localStorage.setItem(KEY+slot,JSON.stringify({sum:{turn:S.turn,gold:S.gold,net:net(),shop:S.shop?S.shop.n:"",over:S.over},S}))}catch(e){storeOk=false}}
+function menu(){view="menu";mode="";ask="";render()}
+function pick(m){mode=m?"new":"load";ask="";render()}
+function slotGo(n){if(mode==="new"){if(rd(n)&&ask!=="o"+n){ask="o"+n;return render()}start(n)}else{const d=rd(n);if(!d)return;S=d.S;slot=n;view="game";tab="city";render()}}
+function del(n){if(ask!=="d"+n){ask="d"+n;return render()}try{localStorage.removeItem(KEY+n)}catch(e){storeOk=false}ask="";render()}
+function vMenu(){
+ let h='<div class="menu"><h1>Rei do Ouro</h1><div class="tag">Simulador de investimentos</div>';
+ if(!mode){
+  const any=[1,2,3,4,5].some(n=>rd(n));
+  h+='<button class="go" onclick="pick(1)">Começar</button><button class="alt" '+(any?"":"disabled ")+'onclick="pick(0)">Continuar</button>';
+  h+='<div class="tag">Seu progresso é salvo automaticamente neste navegador, em 5 espaços.</div>';
+ }else{
+  h+="<h2>"+(mode==="new"?"Escolha um espaço para o novo jogo":"Escolha o jogo para continuar")+"</h2>";
+  for(let n=1;n<=5;n++){
+   const d=rd(n),s=d&&d.sum,can=mode==="new"||!!s;
+   const info=s?"Turno "+s.turn+", "+(s.shop||"sem loja")+", ouro "+f(s.gold)+", patrimônio "+f(s.net)+(s.over?" (encerrado)":""):"Vazio";
+   const lb=mode==="new"?(ask==="o"+n?"Confirmar?":s?"Sobrescrever":"Usar"):"Jogar";
+   h+='<div class="card row"><div><b>Espaço '+n+'</b><div class="tag">'+info+'</div></div><div class="form" style="margin:0"><button class="go" '+(can?"":"disabled ")+'onclick="slotGo('+n+')">'+lb+'</button>'+(s?'<button class="alt" onclick="del('+n+')">'+(ask==="d"+n?"Confirmar?":"Apagar")+'</button>':"")+'</div></div>';
+  }
+  h+='<button class="alt" onclick="menu()">Voltar</button>';
+ }
+ if(!storeOk)h+='<div class="banner neg">Este navegador não permite salvar. O progresso não será guardado.</div>';
+ $("app").innerHTML=h+"</div>";
+}
+menu();
 </script>
 </body>
 </html>
