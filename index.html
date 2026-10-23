@@ -116,7 +116,7 @@ const f=n=>Math.round(n).toLocaleString("pt-BR");
 const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
 let S,tab="inv";
 
-function start(n){slot=n;view="game";S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:{},unl:{},vault:0,orders:[],noise:1,inc:0,sold:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
+function start(n){slot=n;view="game";S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:{},unl:{},vault:0,cap:15,orders:[],noise:1,inc:0,sold:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
 function log(m){S.log.unshift("Turno "+S.turn+": "+m);S.log=S.log.slice(0,14)}
 function net(){return S.gold+(S.vault||0)+stv()+S.act.reduce((s,a)=>s+a.amt,0)-S.debts.reduce((s,d)=>s+d.amt,0)}
 function fill(){
@@ -190,27 +190,30 @@ function vMap(){
 const BASE=10,TXN=5,BAL=10;
 function adjustBar(){return `<div class="card form" style="margin:10px 0"><b>Ouro da loja</b><input id="aj" type="number" min="1" inputmode="numeric" placeholder="valor"><button class="go" onclick="ajustar(1)">Adicionar</button><button class="alt" onclick="ajustar(0)">Remover</button><span style="width:100%"></span><button class="alt" style="color:var(--good)" onclick="ajustar(1,10)">+10</button><button class="alt" style="color:var(--good)" onclick="ajustar(1,50)">+50</button><button class="alt" style="color:var(--good)" onclick="ajustar(1,100)">+100</button><button class="alt" style="color:var(--bad)" onclick="ajustar(0,10)">−10</button><button class="alt" style="color:var(--bad)" onclick="ajustar(0,50)">−50</button><button class="alt" style="color:var(--bad)" onclick="ajustar(0,100)">−100</button></div>`}
 function ajustar(add,q){const v=q||Math.floor(+$("aj").value);if(!(v>0))return log("Digite um valor de ouro maior que zero."),render();S.gold+=add?v:-v;log("Ajuste manual: "+(add?"adicionou ":"removeu ")+f(v)+" de ouro.");check();render()}
+function vRpg(){return `<h2>RPG</h2><div class="tag">Use esta aba para sincronizar o ouro da loja com o ouro do personagem na aventura: adicione o que o jogador colocou na loja e remova o que ele tirou.</div>`+adjustBar()+`<div class="tag">Esses ajustes não contam como renda e não pagam imposto.</div>`}
+function capCard(){const nx=S.cap<25?[25,100]:S.cap<50?[50,200]:null;return `<div class="card"><div class="row"><b>Capacidade do estoque</b><span class="tag">${S.cap} unidades por item</span></div>${nx?`<div class="form"><button class="go" onclick="upCap()">Ampliar para ${nx[0]} (${nx[1]} de ouro)</button></div>`:'<div class="tag">Capacidade máxima atingida.</div>'}</div>`}
+function upCap(){const nx=S.cap<25?[25,100]:S.cap<50?[50,200]:null;if(!nx)return;if(S.gold<nx[1])return log("Você precisa de "+nx[1]+" de ouro livre para ampliar o estoque."),render();S.gold-=nx[1];S.cap=nx[0];log("Estoque ampliado: agora cabem "+nx[0]+" unidades de cada item (custou "+nx[1]+" de ouro).");render()}
 const PL=s=>Object.keys(PR).filter(k=>k===s||PR[k].shop===s);
 const cst=k=>PR[k].c||BASE,bs=k=>PR[k].b||BASE;
 function stv(){return Object.keys(S.stock).reduce((s,k)=>s+S.stock[k]*cst(k),0)}
 function pp(k){const m=PR[k].m,e=S.ev&&EK[S.ev.n];return Math.max(1,Math.round(bs(k)*(e&&m[e]!==undefined?m[e]:m.paz)*S.noise))}
-function fix(){if(typeof S.stock==="number"){const id=S.shop&&S.shop.id;S.stock=id?{[id]:S.stock}:{};S.unl=id?{[id]:1}:{};S.orders.forEach(o=>{o.pid=o.pid||id})}S.stock=S.stock||{};S.unl=S.unl||{};S.vault=S.vault||0}
-function invStock(){return "<h2>Estoque</h2>"+PL(S.shop.id).filter(k=>S.unl[k]).map(k=>`<div class="card row"><span>${PR[k].i} <b>${PR[k].n}</b></span><b>${S.stock[k]||0} un. (valor ${f((S.stock[k]||0)*cst(k))})</b></div>`).join("")}
+function fix(){if(typeof S.stock==="number"){const id=S.shop&&S.shop.id;S.stock=id?{[id]:S.stock}:{};S.unl=id?{[id]:1}:{};S.orders.forEach(o=>{o.pid=o.pid||id})}S.stock=S.stock||{};S.unl=S.unl||{};S.vault=S.vault||0;S.cap=S.cap||15}
+function invStock(){return "<h2>Estoque</h2>"+PL(S.shop.id).filter(k=>S.unl[k]).map(k=>`<div class="card row"><span>${PR[k].i} <b>${PR[k].n}</b></span><b>${S.stock[k]||0}/${S.cap} un. (valor ${f((S.stock[k]||0)*cst(k))})</b></div>`).join("")}
 function vaultCard(){return `<h2>Cofre</h2><div class="card"><div class="row"><b>Ouro guardado: ${f(S.vault)}</b><span class="tag">Protegido de assaltos</span></div><div class="form"><input id="vd" type="number" min="1" inputmode="numeric" placeholder="valor"><button class="go" onclick="depositar()">Depositar</button><button class="alt" onclick="sacar()">Sacar</button></div></div>`}
 function depositar(){const v=Math.floor(+$("vd").value);if(!(v>0))return log("Digite quanto quer depositar."),render();if(v>S.gold)return log("Você só tem "+f(Math.max(0,S.gold))+" de ouro livre para depositar."),render();S.gold-=v;S.vault+=v;log("Depositou "+f(v)+" no cofre.");render()}
 function sacar(){const v=Math.floor(+$("vd").value);if(!(v>0))return log("Digite quanto quer sacar."),render();if(v>S.vault)return log("O cofre só tem "+f(S.vault)+" de ouro."),render();S.vault-=v;S.gold+=v;log("Sacou "+f(v)+" do cofre.");render()}
 function unlockProd(k){const p=PR[k];if(S.unl[k])return;if(S.gold<p.u)return log("Você precisa de "+p.u+" de ouro livre para abrir a fabricação de "+p.n+"."),render();S.gold-=p.u;S.unl[k]=1;log("Abriu a fabricação de "+p.n+" por "+p.u+" de ouro.");render()}
-function mkProd(k){const p=PR[k],q=Math.floor(+$("bq_"+k).value);if(!(q>0))return log("Digite quantas unidades quer produzir."),render();const c=q*cst(k);if(c>S.gold)return log("Faltam "+f(c-S.gold)+" de ouro para produzir "+q+" unidades."),render();S.gold-=c;S.stock[k]=(S.stock[k]||0)+q;log(p.w+" "+q+" unidades de "+p.n+" por "+f(c)+" de ouro.");render()}
+function mkProd(k){const p=PR[k],q=Math.floor(+$("bq_"+k).value);if(!(q>0))return log("Digite quantas unidades quer produzir."),render();if((S.stock[k]||0)+q>S.cap)return log("Estoque cheio: cabem "+S.cap+" unidades de "+p.n+" e você tem "+(S.stock[k]||0)+"."),render();const c=q*cst(k);if(c>S.gold)return log("Faltam "+f(c-S.gold)+" de ouro para produzir "+q+" unidades."),render();S.gold-=c;S.stock[k]=(S.stock[k]||0)+q;log(p.w+" "+q+" unidades de "+p.n+" por "+f(c)+" de ouro.");render()}
 function sellProd(k){const p=PR[k],q=Math.floor(+$("sq_"+k).value),pr=pp(k),have=S.stock[k]||0;if(!(q>0))return log("Digite a quantidade que quer vender."),render();if(q>have)return log("Você só tem "+have+" unidades de "+p.n+" no estoque."),render();if(S.sold+q>BAL)return log("Limite do balcão: você ainda pode vender "+(BAL-S.sold)+" unidades neste turno."),render();S.sold+=q;S.stock[k]=have-q;S.gold+=q*pr;S.inc+=q*pr;log("Vendeu "+q+" "+p.n+" no balcão por "+f(q*pr)+" de ouro.");check();render()}
 function acc(i){const o=S.orders[i];if(!o)return;const k=o.pid||S.shop.id,have=S.stock[k]||0;if(have<o.q)return log("Estoque insuficiente: faltam "+(o.q-have)+" unidades."),render();S.stock[k]=have-o.q;S.orders.splice(i,1);if(Math.random()*100<o.r){S.gold+=o.q*o.p;S.inc+=o.q*o.p;log("Entregou "+o.q+" "+PR[k].n+" para "+o.who+" e recebeu "+f(o.q*o.p)+" de ouro.")}else log("⚠️ "+o.who+" não pagou! Você perdeu "+o.q+" unidades de "+PR[k].n+".");check();render()}
 function vProd(){
  if(!S.shop)return '<h2>Estoque</h2><div class="card tag">Escolha sua loja na aba Cidade primeiro.</div>';
- let h='<h2>'+S.shop.i+' '+S.shop.n+'</h2><div class="tag">Vendas no balcão: restam '+(BAL-S.sold)+' de '+BAL+' neste turno (somando todos os produtos).</div>';
+ let h='<h2>'+S.shop.i+' '+S.shop.n+'</h2><div class="tag">Vendas no balcão: restam '+(BAL-S.sold)+' de '+BAL+' neste turno (somando todos os produtos).</div>'+capCard();
  PL(S.shop.id).forEach(k=>{
   const p=PR[k];
   if(!S.unl[k]){h+=`<div class="card"><div class="row"><b>${p.i} ${p.n}</b><span class="tag">🔒 Fabricação fechada</span></div><div class="tag">${p.t}</div><div class="stats"><span>Custo: ${cst(k)}</span><span>Venda base: ${bs(k)}</span></div><div class="form"><button class="go" onclick="unlockProd('${k}')">Abrir fabricação (${p.u} de ouro)</button></div></div>`;return}
   const pr=pp(k),st=S.ev?S.ev.n:"Tempos de paz",trend=pr>=bs(k)*1.15?"📈 Em alta":pr<bs(k)?"📉 Em baixa":"➖ Estável";
-  h+=`<div class="card"><div class="row"><b>${p.i} ${p.n}</b><span class="tag">${st}</span></div><div class="stats"><span>Estoque: ${S.stock[k]||0}</span><span>Custo: ${cst(k)}</span><span>Preço hoje: ${pr}</span></div><div class="tag">${trend}. ${p.t}</div><div class="form"><label>Qtd <input id="bq_${k}" type="number" min="1" inputmode="numeric"></label><button class="go" onclick="mkProd('${k}')">${p.v} (${cst(k)} de ouro cada)</button></div><div class="form"><label>Qtd <input id="sq_${k}" type="number" min="1" inputmode="numeric"></label><button class="alt" ${S.sold>=BAL?"disabled":""} onclick="sellProd('${k}')">Vender no balcão (${pr} cada)</button></div></div>`;
+  h+=`<div class="card"><div class="row"><b>${p.i} ${p.n}</b><span class="tag">${st}</span></div><div class="stats"><span>Estoque: ${S.stock[k]||0}/${S.cap}</span><span>Custo: ${cst(k)}</span><span>Preço hoje: ${pr}</span></div><div class="tag">${trend}. ${p.t}</div><div class="form"><label>Qtd <input id="bq_${k}" type="number" min="1" inputmode="numeric"></label><button class="go" onclick="mkProd('${k}')">${p.v} (${cst(k)} de ouro cada)</button></div><div class="form"><label>Qtd <input id="sq_${k}" type="number" min="1" inputmode="numeric"></label><button class="alt" ${S.sold>=BAL?"disabled":""} onclick="sellProd('${k}')">Vender no balcão (${pr} cada)</button></div></div>`;
  });
  return h;
 }
@@ -370,14 +373,13 @@ function render(){
  if(view!=="game")return vMenu();
  const g=S.gold,left=g-LIMIT;
  let h=`<div class="row"><h1>Rei do Ouro</h1><button class="alt" onclick="menu()">Menu (jogo salvo)</button></div><div class="top"><div><small>Turno</small><b>${S.turn}</b></div><div><small>Ouro livre</small><b class="${g<0?"neg":""}">${f(g)}</b></div><div><small>Patrimônio (meta ${f(GOAL)})</small><b>${f(net())}</b></div></div>`;
- h+=adjustBar();
  if(!storeOk)h+='<div class="banner neg">Não foi possível salvar neste navegador. O progresso será perdido ao sair.</div>';
  if(S.ev)h+=`<div class="banner"><b>${S.ev.n}</b> (${S.ev.left} turno(s)): ${S.ev.t}</div>`;
  if(g<0&&!S.over)h+=`<div class="banner neg"><b>Perigo!</b> Faltam ${f(left)} de ouro para perder o jogo.</div>`;
  if(S.log[0])h+=`<div class="tag" style="margin-top:8px">Último aviso: ${S.log[0]}</div>`;
- const T=[["city","Cidade"],["orders","Clientes"+(S.orders.length?" ("+S.orders.length+")":"")],["stock","Estoque"],["inv","Inventário"],["mkt","🔒 Investir"],["debt","Dívidas"],["faq","Dúvidas"]];
+ const T=[["city","Cidade"],["orders","Clientes"+(S.orders.length?" ("+S.orders.length+")":"")],["stock","Estoque"],["inv","Inventário"],["mkt","🔒 Investir"],["debt","Dívidas"],["faq","Dúvidas"],["rpg","RPG"]];
  h+='<div class="tabs">'+T.map(t=>`<button class="${tab===t[0]?"on":""}" onclick="tab='${t[0]}';render()">${t[1]}</button>`).join("")+"</div>";
- h+={city:vCity,orders:vCli,stock:vProd,inv:vInv,mkt:vMkt,debt:vDebt,faq:vFaq}[tab]();
+ h+={city:vCity,orders:vCli,stock:vProd,inv:vInv,mkt:vMkt,debt:vDebt,faq:vFaq,rpg:vRpg}[tab]();
  h+=`<button class="go turn" onclick="pass()">Passar turno (despesas: ${LIVING} de ouro)</button>`;
  if(S.over)h+=`<div class="over"><div><h1>${S.over==="win"?"Você venceu!":"Você faliu!"}</h1><p>${S.over==="win"?"Seu patrimônio chegou a "+f(net())+" em "+S.turn+" turnos.":"Seu ouro chegou a "+f(S.gold)+" no turno "+S.turn+"."}</p><button class="go" onclick="start(slot)">Jogar de novo</button></div></div>`;
  $("app").innerHTML=h;save();
