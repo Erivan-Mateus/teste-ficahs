@@ -116,9 +116,9 @@ const f=n=>Math.round(n).toLocaleString("pt-BR");
 const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
 let S,tab="inv";
 
-function start(n){slot=n;view="game";S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:0,orders:[],noise:1,inc:0,sold:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
+function start(n){slot=n;view="game";S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:{},unl:{},vault:0,orders:[],noise:1,inc:0,sold:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
 function log(m){S.log.unshift("Turno "+S.turn+": "+m);S.log=S.log.slice(0,14)}
-function net(){return S.gold+S.stock*BASE+S.act.reduce((s,a)=>s+a.amt,0)-S.debts.reduce((s,d)=>s+d.amt,0)}
+function net(){return S.gold+(S.vault||0)+stv()+S.act.reduce((s,a)=>s+a.amt,0)-S.debts.reduce((s,d)=>s+d.amt,0)}
 function fill(){
  S.offers=S.offers.filter(o=>o.exp>S.turn);
  while(S.offers.length<5){
@@ -168,7 +168,7 @@ function pay(i,all){
 }
 function event(){
  const e=E[rnd(0,E.length-1)];
- if(e.g){const g=rnd(e.g[0],e.g[1]);S.gold+=g;log((g>0?"🎉 ":"🗡️ ")+e.n+" "+(g>0?"+":"")+f(g)+" de ouro.")}
+ if(e.g){let g=rnd(e.g[0],e.g[1]);if(g<0)g=-Math.min(-g,Math.max(0,S.gold));S.gold+=g;log((g>0?"🎉 ":"🗡️ ")+e.n+" "+(g>0?"+":"")+f(g)+" de ouro.")}
  else{S.ev={...e,left:e.l};log("⚠️ Evento: "+e.n)}
 }
 function check(){
@@ -188,6 +188,40 @@ function vMap(){
  return s+"</svg><div class='tag'>"+(has?"Seu ponto está aberto no mapa. Os outros estão trancados.":"Escolha uma loja abaixo para abrir seu ponto no mapa.")+"</div>";
 }
 const BASE=10,TXN=5,BAL=10;
+const PL=s=>Object.keys(PR).filter(k=>k===s||PR[k].shop===s);
+const cst=k=>PR[k].c||BASE,bs=k=>PR[k].b||BASE;
+function stv(){return Object.keys(S.stock).reduce((s,k)=>s+S.stock[k]*cst(k),0)}
+function pp(k){const m=PR[k].m,e=S.ev&&EK[S.ev.n];return Math.max(1,Math.round(bs(k)*(e&&m[e]!==undefined?m[e]:m.paz)*S.noise))}
+function fix(){if(typeof S.stock==="number"){const id=S.shop&&S.shop.id;S.stock=id?{[id]:S.stock}:{};S.unl=id?{[id]:1}:{};S.orders.forEach(o=>{o.pid=o.pid||id})}S.stock=S.stock||{};S.unl=S.unl||{};S.vault=S.vault||0}
+function invStock(){return "<h2>Estoque</h2>"+PL(S.shop.id).filter(k=>S.unl[k]).map(k=>`<div class="card row"><span>${PR[k].i} <b>${PR[k].n}</b></span><b>${S.stock[k]||0} un. (valor ${f((S.stock[k]||0)*cst(k))})</b></div>`).join("")}
+function vaultCard(){return `<h2>Cofre</h2><div class="card"><div class="row"><b>Ouro guardado: ${f(S.vault)}</b><span class="tag">Protegido de assaltos</span></div><div class="form"><input id="vd" type="number" min="1" inputmode="numeric" placeholder="valor"><button class="go" onclick="depositar()">Depositar</button><button class="alt" onclick="sacar()">Sacar</button></div></div>`}
+function depositar(){const v=Math.floor(+$("vd").value);if(!(v>0))return log("Digite quanto quer depositar."),render();if(v>S.gold)return log("Você só tem "+f(Math.max(0,S.gold))+" de ouro livre para depositar."),render();S.gold-=v;S.vault+=v;log("Depositou "+f(v)+" no cofre.");render()}
+function sacar(){const v=Math.floor(+$("vd").value);if(!(v>0))return log("Digite quanto quer sacar."),render();if(v>S.vault)return log("O cofre só tem "+f(S.vault)+" de ouro."),render();S.vault-=v;S.gold+=v;log("Sacou "+f(v)+" do cofre.");render()}
+function unlockProd(k){const p=PR[k];if(S.unl[k])return;if(S.gold<p.u)return log("Você precisa de "+p.u+" de ouro livre para abrir a fabricação de "+p.n+"."),render();S.gold-=p.u;S.unl[k]=1;log("Abriu a fabricação de "+p.n+" por "+p.u+" de ouro.");render()}
+function mkProd(k){const p=PR[k],q=Math.floor(+$("bq_"+k).value);if(!(q>0))return log("Digite quantas unidades quer produzir."),render();const c=q*cst(k);if(c>S.gold)return log("Faltam "+f(c-S.gold)+" de ouro para produzir "+q+" unidades."),render();S.gold-=c;S.stock[k]=(S.stock[k]||0)+q;log(p.w+" "+q+" unidades de "+p.n+" por "+f(c)+" de ouro.");render()}
+function sellProd(k){const p=PR[k],q=Math.floor(+$("sq_"+k).value),pr=pp(k),have=S.stock[k]||0;if(!(q>0))return log("Digite a quantidade que quer vender."),render();if(q>have)return log("Você só tem "+have+" unidades de "+p.n+" no estoque."),render();if(S.sold+q>BAL)return log("Limite do balcão: você ainda pode vender "+(BAL-S.sold)+" unidades neste turno."),render();S.sold+=q;S.stock[k]=have-q;S.gold+=q*pr;S.inc+=q*pr;log("Vendeu "+q+" "+p.n+" no balcão por "+f(q*pr)+" de ouro.");check();render()}
+function acc(i){const o=S.orders[i];if(!o)return;const k=o.pid||S.shop.id,have=S.stock[k]||0;if(have<o.q)return log("Estoque insuficiente: faltam "+(o.q-have)+" unidades."),render();S.stock[k]=have-o.q;S.orders.splice(i,1);if(Math.random()*100<o.r){S.gold+=o.q*o.p;S.inc+=o.q*o.p;log("Entregou "+o.q+" "+PR[k].n+" para "+o.who+" e recebeu "+f(o.q*o.p)+" de ouro.")}else log("⚠️ "+o.who+" não pagou! Você perdeu "+o.q+" unidades de "+PR[k].n+".");check();render()}
+function vProd(){
+ if(!S.shop)return '<h2>Estoque</h2><div class="card tag">Escolha sua loja na aba Cidade primeiro.</div>';
+ let h='<h2>'+S.shop.i+' '+S.shop.n+'</h2><div class="tag">Vendas no balcão: restam '+(BAL-S.sold)+' de '+BAL+' neste turno (somando todos os produtos).</div>';
+ PL(S.shop.id).forEach(k=>{
+  const p=PR[k];
+  if(!S.unl[k]){h+=`<div class="card"><div class="row"><b>${p.i} ${p.n}</b><span class="tag">🔒 Fabricação fechada</span></div><div class="tag">${p.t}</div><div class="stats"><span>Custo: ${cst(k)}</span><span>Venda base: ${bs(k)}</span></div><div class="form"><button class="go" onclick="unlockProd('${k}')">Abrir fabricação (${p.u} de ouro)</button></div></div>`;return}
+  const pr=pp(k),st=S.ev?S.ev.n:"Tempos de paz",trend=pr>=bs(k)*1.15?"📈 Em alta":pr<bs(k)?"📉 Em baixa":"➖ Estável";
+  h+=`<div class="card"><div class="row"><b>${p.i} ${p.n}</b><span class="tag">${st}</span></div><div class="stats"><span>Estoque: ${S.stock[k]||0}</span><span>Custo: ${cst(k)}</span><span>Preço hoje: ${pr}</span></div><div class="tag">${trend}. ${p.t}</div><div class="form"><label>Qtd <input id="bq_${k}" type="number" min="1" inputmode="numeric"></label><button class="go" onclick="mkProd('${k}')">${p.v} (${cst(k)} de ouro cada)</button></div><div class="form"><label>Qtd <input id="sq_${k}" type="number" min="1" inputmode="numeric"></label><button class="alt" ${S.sold>=BAL?"disabled":""} onclick="sellProd('${k}')">Vender no balcão (${pr} cada)</button></div></div>`;
+ });
+ return h;
+}
+function vCli(){
+ if(!S.shop)return '<h2>Clientes</h2><div class="card tag">Escolha sua loja na aba Cidade primeiro.</div>';
+ let h="<h2>Clientes</h2>"+PL(S.shop.id).filter(k=>S.unl[k]).map(k=>`<div class="card row"><span>${PR[k].i} <b>${PR[k].n}</b> em estoque</span><b>${S.stock[k]||0} un.</b></div>`).join("");
+ if(!S.orders.length)h+='<div class="card tag">Nenhum cliente por enquanto. Novos aparecem a cada turno.</div>';
+ S.orders.forEach((o,i)=>{
+  const k=o.pid||S.shop.id,p=PR[k],have=S.stock[k]||0,can=have>=o.q;
+  h+=`<div class="card"><div class="row"><b>${o.who}</b><span class="tag">espera por mais ${o.exp-S.turn} turno(s)</span></div><div class="stats"><span>Quer comprar: <b>${o.q} × ${p.i} ${p.n}</b></span><span>${o.p} de ouro cada</span><span class="pos">Pagamento: ${f(o.q*o.p)}</span></div><div class="stats"><span>Confiabilidade: ${o.r}%</span></div><div class="form"><button class="go" ${can?"":"disabled"} onclick="acc(${i})">Aceitar</button><button class="alt" onclick="refuseOrder(${i})">Recusar</button>${can?"":`<span class="tag">Faltam ${o.q-have} unidades no estoque</span>`}</div></div>`;
+ });
+ return h;
+}
 const TX={
 armas:{paz:10,g:15,f:6,c:7,p:8,i:11},
 armadura:{paz:10,g:14,f:6,c:7,p:8,i:11},
@@ -211,11 +245,13 @@ armas:{n:"Espada",i:"🗡️",t:"Vende pouco na paz e dispara na guerra.",v:"For
 armadura:{n:"Elmo",i:"🪖",t:"Segue as armas: sobe na guerra e cai na paz.",v:"Forjar",w:"Forjou",m:{paz:.85,g:1.8,f:.8,c:.7,p:.8,i:1}},
 comida:{n:"Cesta de Pães",i:"🍞",t:"A procura é constante e os festivais enchem as mesas.",v:"Assar",w:"Assou",m:{paz:1.1,g:1.3,f:1.6,c:1.1,p:.8,i:1.2}},
 roupas:{n:"Capa de Viagem",i:"🧥",t:"Festas valorizam os tecidos finos.",v:"Costurar",w:"Costurou",m:{paz:1.1,g:.9,f:1.5,c:.7,p:.8,i:1.2}},
-magia:{n:"Poção de Cura",i:"🧪",t:"Pestes e doenças aumentam a procura.",v:"Preparar",w:"Preparou",m:{paz:1,g:1.2,f:1.2,c:.8,p:1.9,i:1.2}}};
+magia:{n:"Poção de Cura",i:"🧪",t:"Pestes e doenças aumentam a procura.",v:"Preparar",w:"Preparou",m:{paz:1,g:1.2,f:1.2,c:.8,p:1.9,i:1.2}},
+forca:{n:"Poção de Força",i:"💪",t:"Dispara na guerra: soldados pagam caro por força extra.",v:"Preparar",w:"Preparou",shop:"magia",c:11,b:11,u:50,m:{paz:1,g:2,f:1,c:.8,p:.9,i:1.2}},
+plantas:{n:"Poção de Crescer Plantas",i:"🌱",t:"Valoriza no Festival da Colheita.",v:"Preparar",w:"Preparou",shop:"magia",c:10,b:10,u:50,m:{paz:1,g:.9,f:1.8,c:.8,p:.9,i:1.2}}};
 const EK={"Guerra":"g","Festival da Colheita":"f","Crise Econômica":"c","Peste":"p","Inflação":"i"};
 const CL=[{n:"Capitão da Guarda",r:100},{n:"Embaixador do Norte",r:98},{n:"Mestre de Obras",r:95},{n:"Dona Marta",r:92},{n:"Chefe da Aldeia",r:90},{n:"Barão Ricardo",r:88},{n:"Mercador do Porto",r:85},{n:"Viajante Misterioso",r:80}];
 function price(){const m=PR[S.shop.id].m,k=S.ev&&EK[S.ev.n];return Math.max(1,Math.round(BASE*(k&&m[k]!==undefined?m[k]:m.paz)*S.noise))}
-function genOrders(){for(let k=rnd(1,3);k>0;k--){const f=.8+Math.random()*.4;const c=CL[rnd(0,CL.length-1)];S.orders.push({who:c.n,r:c.r,q:rnd(6,20),p:Math.max(1,Math.round(price()*f)),exp:S.turn+2})}}
+function genOrders(){for(let k=rnd(1,3);k>0;k--){const f=.8+Math.random()*.4;const c=CL[rnd(0,CL.length-1)],ul=PL(S.shop.id).filter(x=>S.unl[x]),pid=ul[rnd(0,ul.length-1)];S.orders.push({who:c.n,r:c.r,q:rnd(6,20),pid:pid,p:Math.max(1,Math.round(pp(pid)*f)),exp:S.turn+2})}}
 function buyStock(){const q=Math.floor(+$("bq").value);if(!(q>0))return log("Digite quantas unidades quer produzir."),render();const c=q*BASE;if(c>S.gold)return log("Faltam "+f(c-S.gold)+" de ouro para produzir "+q+" unidades."),render();S.gold-=c;S.stock+=q;log(PR[S.shop.id].w+" "+q+" unidades por "+f(c)+" de ouro.");render()}
 function sellBar(){const q=Math.floor(+$("sq").value),p=price();if(!(q>0))return log("Digite a quantidade que quer vender."),render();if(q>S.stock)return log("Você só tem "+S.stock+" unidades no estoque."),render();if(S.sold+q>BAL)return log("Limite do balcão: você ainda pode vender "+(BAL-S.sold)+" unidades neste turno."),render();S.sold+=q;S.stock-=q;S.gold+=q*p;S.inc+=q*p;log("Vendeu "+q+" no balcão por "+f(q*p)+" de ouro.");check();render()}
 function acceptOrder(i){const o=S.orders[i];if(!o)return;if(S.stock<o.q)return log("Estoque insuficiente: faltam "+(o.q-S.stock)+" unidades."),render();S.stock-=o.q;S.orders.splice(i,1);if(Math.random()*100<o.r){S.gold+=o.q*o.p;S.inc+=o.q*o.p;log("Entregou "+o.q+" para "+o.who+" e recebeu "+f(o.q*o.p)+" de ouro.")}else log("⚠️ "+o.who+" não pagou! Você perdeu "+o.q+" unidades.");check();render()}
@@ -247,7 +283,7 @@ function vOrders(){
 }
 function chooseShop(i){
  if(S.shop)return;
- S.shop=SHOPS[i];S.stock=12;genOrders();log("Você recebeu 12 unidades de "+PR[S.shop.id].n+" no estoque.");log("Você ficou com a "+S.shop.n+". É nela que você vai começar a aprender.");render();
+ S.shop=SHOPS[i];S.stock={[S.shop.id]:12};S.unl={[S.shop.id]:1};genOrders();log("Você recebeu 12 unidades de "+PR[S.shop.id].n+" no estoque.");log("Você ficou com a "+S.shop.n+". É nela que você vai começar a aprender.");render();
 }
 function vCity(){
  const has=!!S.shop;
@@ -281,7 +317,7 @@ function pass(){
 }
 
 function vInv(){
- let h=(S.shop?`<div class="card row"><span>${S.shop.i} <b>${S.shop.n}</b></span><span class="tag">Onde você começa a aprender</span></div>`:"")+(S.shop?`<h2>Estoque</h2><div class="card row"><span>${PR[S.shop.id].i} <b>${PR[S.shop.id].n}</b></span><b>${S.stock} un. (valor ${f(S.stock*BASE)})</b></div>`:"")+taxCard()+"<h2>Investimentos ativos</h2>";
+ let h=(S.shop?`<div class="card row"><span>${S.shop.i} <b>${S.shop.n}</b></span><span class="tag">Onde você começa a aprender</span></div>`:"")+(S.shop?`${invStock()}${vaultCard()}`:"")+taxCard()+"<h2>Investimentos ativos</h2>";
  if(!S.act.length)h+='<div class="card tag">Nada investido. Abra a aba Investir e escolha uma oferta.</div>';
  S.act.forEach((a,i)=>{
   h+=`<div class="card"><div class="row"><b>${a.name}</b><span class="tag">${a.left} turno(s) restante(s)${a.dur>=4?" · longo prazo":""}</span></div>
@@ -325,7 +361,7 @@ function vFaq(){
  ["O que é diversificar?","Dividir o ouro em vários investimentos, para que um fracasso não derrube tudo."],
  ["Como eu perco?","Se o ouro livre chegar a "+f(LIMIT)+". A cada turno você gasta "+LIVING+" de ouro com despesas, e os cobradores levam ouro de dívidas atrasadas."],
  ["Como eu ganho?","Chegando a "+f(GOAL)+" de patrimônio: ouro + investimentos – dívidas."],
- ["Preços da loja","Seu produto custa 10 de ouro. O preço de venda muda com a cidade: na paz, espadas e elmos vendem abaixo do custo (prejuízo), e na guerra disparam. Festivais favorecem comida e roupas, e a peste favorece poções. Guarde estoque para esperar a alta."],["Imposto de renda","A cada 5 turnos a coroa cobra imposto sobre a renda do período (vendas e rendimentos). A alíquota normal é 10%, mas depende da sua loja e da época: quando o seu produto está em alta a alíquota sobe (até 15%), e quando está em baixa ela cai (até 5%). Por exemplo, a loja de pães paga 15% no festival e 6% na guerra, e a de espadas paga o contrário."],["Dicas","Não coloque tudo em uma oferta só. Pague o agiota primeiro. Ofertas raras pagam muito, mas quase sempre dão errado. Eventos mudam risco e lucro, então vale esperar uma crise passar."]];
+ ["Preços da loja","Seu produto custa 10 de ouro. O preço de venda muda com a cidade: na paz, espadas e elmos vendem abaixo do custo (prejuízo), e na guerra disparam. Festivais favorecem comida e roupas, e a peste favorece poções. Guarde estoque para esperar a alta."],["Imposto de renda","A cada 5 turnos a coroa cobra imposto sobre a renda do período (vendas e rendimentos). A alíquota normal é 10%, mas depende da sua loja e da época: quando o seu produto está em alta a alíquota sobe (até 15%), e quando está em baixa ela cai (até 5%). Por exemplo, a loja de pães paga 15% no festival e 6% na guerra, e a de espadas paga o contrário."],["Cofre","Guarde ouro no cofre (aba Inventário) para ficar a salvo de assaltos. O ouro do cofre conta no patrimônio, mas não conta como ouro livre, e é o ouro livre que decide se você perde ao chegar a -500."],["Dicas","Não coloque tudo em uma oferta só. Pague o agiota primeiro. Ofertas raras pagam muito, mas quase sempre dão errado. Eventos mudam risco e lucro, então vale esperar uma crise passar."]];
  return "<h2>Dúvidas</h2>"+q.map(x=>`<details><summary>${x[0]}</summary><p>${x[1]}</p></details>`).join("");
 }
 function render(){
@@ -338,7 +374,7 @@ function render(){
  if(S.log[0])h+=`<div class="tag" style="margin-top:8px">Último aviso: ${S.log[0]}</div>`;
  const T=[["city","Cidade"],["orders","Clientes"+(S.orders.length?" ("+S.orders.length+")":"")],["stock","Estoque"],["inv","Inventário"],["mkt","🔒 Investir"],["debt","Dívidas"],["faq","Dúvidas"]];
  h+='<div class="tabs">'+T.map(t=>`<button class="${tab===t[0]?"on":""}" onclick="tab='${t[0]}';render()">${t[1]}</button>`).join("")+"</div>";
- h+={city:vCity,orders:vOrders,stock:vStock,inv:vInv,mkt:vMkt,debt:vDebt,faq:vFaq}[tab]();
+ h+={city:vCity,orders:vCli,stock:vProd,inv:vInv,mkt:vMkt,debt:vDebt,faq:vFaq}[tab]();
  h+=`<button class="go turn" onclick="pass()">Passar turno (despesas: ${LIVING} de ouro)</button>`;
  if(S.over)h+=`<div class="over"><div><h1>${S.over==="win"?"Você venceu!":"Você faliu!"}</h1><p>${S.over==="win"?"Seu patrimônio chegou a "+f(net())+" em "+S.turn+" turnos.":"Seu ouro chegou a "+f(S.gold)+" no turno "+S.turn+"."}</p><button class="go" onclick="start(slot)">Jogar de novo</button></div></div>`;
  $("app").innerHTML=h;save();
@@ -349,7 +385,7 @@ function rd(n){try{const r=localStorage.getItem(KEY+n);return r?JSON.parse(r):nu
 function save(){if(view!=="game"||!S||!slot)return;try{localStorage.setItem(KEY+slot,JSON.stringify({sum:{turn:S.turn,gold:S.gold,net:net(),shop:S.shop?S.shop.n:"",over:S.over},S}))}catch(e){storeOk=false}}
 function menu(){view="menu";mode="";ask="";render()}
 function pick(m){mode=m?"new":"load";ask="";render()}
-function slotGo(n){if(mode==="new"){if(rd(n)&&ask!=="o"+n){ask="o"+n;return render()}start(n)}else{const d=rd(n);if(!d)return;S=d.S;slot=n;view="game";tab="city";render()}}
+function slotGo(n){if(mode==="new"){if(rd(n)&&ask!=="o"+n){ask="o"+n;return render()}start(n)}else{const d=rd(n);if(!d)return;S=d.S;fix();slot=n;view="game";tab="city";render()}}
 function del(n){if(ask!=="d"+n){ask="d"+n;return render()}try{localStorage.removeItem(KEY+n)}catch(e){storeOk=false}ask="";render()}
 function vMenu(){
  let h='<div class="menu"><h1>Rei do Ouro</h1><div class="tag">Simulador de investimentos</div>';
