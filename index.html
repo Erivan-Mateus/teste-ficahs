@@ -111,7 +111,7 @@ const f=n=>Math.round(n).toLocaleString("pt-BR");
 const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
 let S,tab="inv";
 
-function start(){S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:0,orders:[],noise:1,inc:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
+function start(){S={gold:300,turn:1,act:[],debts:[],offers:[],cd:{},ev:null,log:[],over:null,shop:null,stock:0,orders:[],noise:1,inc:0,sold:0};fill();log("Bem-vindo! Chegue a "+f(GOAL)+" de patrimônio sem deixar o ouro cair a "+f(LIMIT)+". Primeiro, escolha sua loja na aba Cidade.");tab="city";render()}
 function log(m){S.log.unshift("Turno "+S.turn+": "+m);S.log=S.log.slice(0,14)}
 function net(){return S.gold+S.stock*BASE+S.act.reduce((s,a)=>s+a.amt,0)-S.debts.reduce((s,d)=>s+d.amt,0)}
 function fill(){
@@ -182,7 +182,7 @@ function vMap(){
  });
  return s+"</svg><div class='tag'>"+(has?"Seu ponto está aberto no mapa. Os outros estão trancados.":"Escolha uma loja abaixo para abrir seu ponto no mapa.")+"</div>";
 }
-const BASE=10,TXN=5;
+const BASE=10,TXN=5,BAL=10;
 const TX={
 armas:{paz:10,g:15,f:6,c:7,p:8,i:11},
 armadura:{paz:10,g:14,f:6,c:7,p:8,i:11},
@@ -212,7 +212,7 @@ const CL=[{n:"Capitão da Guarda",r:100},{n:"Embaixador do Norte",r:98},{n:"Mest
 function price(){const m=PR[S.shop.id].m,k=S.ev&&EK[S.ev.n];return Math.max(1,Math.round(BASE*(k&&m[k]!==undefined?m[k]:m.paz)*S.noise))}
 function genOrders(){for(let k=rnd(1,3);k>0;k--){const f=.8+Math.random()*.4;const c=CL[rnd(0,CL.length-1)];S.orders.push({who:c.n,r:c.r,q:rnd(6,20),p:Math.max(1,Math.round(price()*f)),exp:S.turn+2})}}
 function buyStock(){const q=Math.floor(+$("bq").value);if(!(q>0))return log("Digite quantas unidades quer produzir."),render();const c=q*BASE;if(c>S.gold)return log("Faltam "+f(c-S.gold)+" de ouro para produzir "+q+" unidades."),render();S.gold-=c;S.stock+=q;log(PR[S.shop.id].w+" "+q+" unidades por "+f(c)+" de ouro.");render()}
-function sellBar(){const q=Math.floor(+$("sq").value),p=price();if(!(q>0))return log("Digite a quantidade que quer vender."),render();if(q>S.stock)return log("Você só tem "+S.stock+" unidades no estoque."),render();S.stock-=q;S.gold+=q*p;S.inc+=q*p;log("Vendeu "+q+" no balcão por "+f(q*p)+" de ouro.");check();render()}
+function sellBar(){const q=Math.floor(+$("sq").value),p=price();if(!(q>0))return log("Digite a quantidade que quer vender."),render();if(q>S.stock)return log("Você só tem "+S.stock+" unidades no estoque."),render();if(S.sold+q>BAL)return log("Limite do balcão: você ainda pode vender "+(BAL-S.sold)+" unidades neste turno."),render();S.sold+=q;S.stock-=q;S.gold+=q*p;S.inc+=q*p;log("Vendeu "+q+" no balcão por "+f(q*p)+" de ouro.");check();render()}
 function acceptOrder(i){const o=S.orders[i];if(!o)return;if(S.stock<o.q)return log("Estoque insuficiente: faltam "+(o.q-S.stock)+" unidades."),render();S.stock-=o.q;S.orders.splice(i,1);if(Math.random()*100<o.r){S.gold+=o.q*o.p;S.inc+=o.q*o.p;log("Entregou "+o.q+" para "+o.who+" e recebeu "+f(o.q*o.p)+" de ouro.")}else log("⚠️ "+o.who+" não pagou! Você perdeu "+o.q+" unidades.");check();render()}
 function refuseOrder(i){const o=S.orders[i];if(!o)return;log("Recusou a encomenda de "+o.who+".");S.orders.splice(i,1);render()}
 function vStock(){
@@ -223,7 +223,7 @@ function vStock(){
  <div class="stats"><span>Estoque: ${S.stock}</span><span>Custo: ${BASE}</span><span>Preço hoje: ${pr}</span></div>
  <div class="tag">${trend}. ${p.t}</div>
  <div class="form"><label>Qtd <input id="bq" type="number" min="1" inputmode="numeric"></label><button class="go" onclick="buyStock()">${p.v} (${BASE} de ouro cada)</button></div>
- <div class="form"><label>Qtd <input id="sq" type="number" min="1" inputmode="numeric"></label><button class="alt" onclick="sellBar()">Vender no balcão (${pr} cada)</button></div></div>`;
+ <div class="form"><label>Qtd <input id="sq" type="number" min="1" inputmode="numeric"></label><button class="alt" ${S.sold>=BAL?"disabled":""} onclick="sellBar()">Vender no balcão (${pr} cada)</button><span class="tag">Restam ${BAL-S.sold} de ${BAL} vendas neste turno</span></div></div>`;
  return h;
 }
 function vOrders(){
@@ -256,7 +256,7 @@ function vCity(){
 function pass(){
  if(!S.shop){log("Escolha uma loja na aba Cidade antes de passar o turno.");return render()}
  if(S.over)return;
- S.turn++;S.gold-=LIVING;
+ S.turn++;S.sold=0;S.gold-=LIVING;
  S.act=S.act.filter(a=>{
   a.left--;if(a.left>0)return true;
   if(Math.random()*100<a.risk)log("💀 "+a.name+" deu errado: perdeu "+f(a.amt)+".");
