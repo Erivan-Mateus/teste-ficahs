@@ -188,6 +188,8 @@ function vMap(){
  return s+"</svg><div class='tag'>"+(has?"Seu ponto está aberto no mapa. Os outros estão trancados.":"Escolha uma loja abaixo para abrir seu ponto no mapa.")+"</div>";
 }
 const BASE=10,TXN=5,BAL=10;
+function adjustBar(){return `<div class="card form" style="margin:10px 0"><b>Ouro da loja</b><input id="aj" type="number" min="1" inputmode="numeric" placeholder="valor"><button class="go" onclick="ajustar(1)">Adicionar</button><button class="alt" onclick="ajustar(0)">Remover</button><span style="width:100%"></span><button class="alt" style="color:var(--good)" onclick="ajustar(1,10)">+10</button><button class="alt" style="color:var(--good)" onclick="ajustar(1,50)">+50</button><button class="alt" style="color:var(--good)" onclick="ajustar(1,100)">+100</button><button class="alt" style="color:var(--bad)" onclick="ajustar(0,10)">−10</button><button class="alt" style="color:var(--bad)" onclick="ajustar(0,50)">−50</button><button class="alt" style="color:var(--bad)" onclick="ajustar(0,100)">−100</button></div>`}
+function ajustar(add,q){const v=q||Math.floor(+$("aj").value);if(!(v>0))return log("Digite um valor de ouro maior que zero."),render();S.gold+=add?v:-v;log("Ajuste manual: "+(add?"adicionou ":"removeu ")+f(v)+" de ouro.");check();render()}
 const PL=s=>Object.keys(PR).filter(k=>k===s||PR[k].shop===s);
 const cst=k=>PR[k].c||BASE,bs=k=>PR[k].b||BASE;
 function stv(){return Object.keys(S.stock).reduce((s,k)=>s+S.stock[k]*cst(k),0)}
@@ -368,6 +370,7 @@ function render(){
  if(view!=="game")return vMenu();
  const g=S.gold,left=g-LIMIT;
  let h=`<div class="row"><h1>Rei do Ouro</h1><button class="alt" onclick="menu()">Menu (jogo salvo)</button></div><div class="top"><div><small>Turno</small><b>${S.turn}</b></div><div><small>Ouro livre</small><b class="${g<0?"neg":""}">${f(g)}</b></div><div><small>Patrimônio (meta ${f(GOAL)})</small><b>${f(net())}</b></div></div>`;
+ h+=adjustBar();
  if(!storeOk)h+='<div class="banner neg">Não foi possível salvar neste navegador. O progresso será perdido ao sair.</div>';
  if(S.ev)h+=`<div class="banner"><b>${S.ev.n}</b> (${S.ev.left} turno(s)): ${S.ev.t}</div>`;
  if(g<0&&!S.over)h+=`<div class="banner neg"><b>Perigo!</b> Faltam ${f(left)} de ouro para perder o jogo.</div>`;
